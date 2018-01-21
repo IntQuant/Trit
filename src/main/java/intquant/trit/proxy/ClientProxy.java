@@ -1,5 +1,6 @@
 package intquant.trit.proxy;
 
+import net.minecraft.block.Block;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.item.Item;
 import net.minecraftforge.client.event.ModelRegistryEvent;
@@ -21,6 +22,10 @@ public class ClientProxy extends CommonProxy {
     	for (Item current : CommonProxy.trit_items) {
     		CommonProxy.logger.info("Registering model {}", current.getRegistryName());
     		ModelLoader.setCustomModelResourceLocation(current, 0, new ModelResourceLocation(current.getRegistryName(), "inventory"));
+    	}
+    	for (Block current : CommonProxy.trit_blocks) {
+    		CommonProxy.logger.info("Registering model {}", current.getRegistryName());
+    		ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(current), 0, new ModelResourceLocation(current.getRegistryName(), "inventory"));
     	}
     }
 }
