@@ -50,8 +50,9 @@ public class CommonProxy {
 		//GameRegistry.registerTileEntity(TileEntitySensor.class, "TileEntitySensor");
 		
 		addBasicBlock("chassis", Material.IRON);
-		addBasicBlock("flow_linker", Material.ANVIL);
-		addBasicBlock("adapter", Material.ANVIL);
+		addBasicBlock("flow_linker", Material.GLASS);
+		addBasicBlock("adapter", Material.GLASS);
+		addBasicBlock("vehicle_core", Material.GLASS);
 		
 		
 		for (Block current : trit_blocks) {
