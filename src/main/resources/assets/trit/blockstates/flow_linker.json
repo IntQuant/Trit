@@ -1,0 +1,10 @@
+{
+  "forge_marker": 1,
+  "defaults": {
+    "model": "trit:flow_linker"
+  },
+  "variants": {
+    "normal": [{}],
+    "inventory": [{}]
+  }
+}

@@ -3,3 +3,6 @@ item.trit.crystal_material.name=Material crystal
 item.trit.crystal_spatial.name=Spatial crystal
 item.trit.ingot_obsidian.name=Obsidian ingot
 item.trit.leninade.name="Leninade"
+
+tilt.trit.chassis.name=Chassis
+tilt.trit.flow_linker.name=Flow linker
