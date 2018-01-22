@@ -4,7 +4,7 @@ item.trit.crystal_spatial.name=Spatial crystal
 item.trit.ingot_obsidian.name=Obsidian ingot
 item.trit.leninade.name="Leninade"
 
-tilt.trit.chassis.name=Chassis
-tilt.trit.flow_linker.name=Flow linker
-tilt.trit.adapter.name=Adapter
-titl.trit.vehicle_core.name=Vehicle core
+tile.trit.chassis.name=Chassis
+tile.trit.flow_linker.name=Flow linker
+tile.trit.adapter.name=Adapter
+tile.trit.vehicle_core.name=Vehicle core
