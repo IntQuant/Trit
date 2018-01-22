@@ -13,14 +13,16 @@ public interface IEnergyController {
 	}
 	
 	default long getAcceptableLight() {
-		return Math.max(0, getLightStorage() - manageLight(0));
+		return Math.max(0, getMaxLightStorage() - manageLight(0));
 	}
 	default long getAcceptableForce() {
-		return Math.max(0, getForceStorage() - manageForce(0));
+		return Math.max(0, getMaxForceStorage() - manageForce(0));
 	}
 	default long getAcceptableSpatial() {
-		return Math.max(0, getSpatialStorage() - manageSpatial(0));
+		return Math.max(0, getMaxSpatialStorage() - manageSpatial(0));
 	}
+	
+	boolean isValid();
 	
 	
 	//Should add value to energy and return result
@@ -28,9 +30,9 @@ public interface IEnergyController {
 	default long manageForce(long value)   {return 0;};
 	default long manageSpatial(long value) {return 0;};
 	
-	default long getLightStorage()   {return 0;};
-	default long getForceStorage()   {return 0;};
-	default long getSpatialStorage() {return 0;};
+	default long getMaxLightStorage()   {return 0;};
+	default long getMaxForceStorage()   {return 0;};
+	default long getMaxSpatialStorage() {return 0;};
 	
 	default long provideLight(long value) {
 		long targetValue = Math.min(getProvideableLight(), value);

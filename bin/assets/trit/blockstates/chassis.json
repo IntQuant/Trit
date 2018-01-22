@@ -4,7 +4,24 @@
     "model": "trit:chassis"
   },
   "variants": {
-    "normal": [{}],
+    "normal": [
+        { "model": "trit:chassis" },
+        { "model": "trit:chassis", "x": 90 },
+        { "model": "trit:chassis", "x": 180 },
+        { "model": "trit:chassis", "x": 270 },
+        { "model": "trit:chassis", "y": 90 },
+        { "model": "trit:chassis", "y": 90, "x": 90 },
+        { "model": "trit:chassis", "y": 90, "x": 180 },
+        { "model": "trit:chassis", "y": 90, "x": 270 },
+        { "model": "trit:chassis", "y": 180 },
+        { "model": "trit:chassis", "y": 180, "x": 90 },
+        { "model": "trit:chassis", "y": 180, "x": 180 },
+        { "model": "trit:chassis", "y": 180, "x": 270 },
+        { "model": "trit:chassis", "y": 270 },
+        { "model": "trit:chassis", "y": 270, "x": 90 },
+        { "model": "trit:chassis", "y": 270, "x": 180 },
+        { "model": "trit:chassis", "y": 270, "x": 270 }
+    ],
     "inventory": [{}]
   }
 }
