@@ -6,6 +6,7 @@ import java.util.List;
 import org.apache.logging.log4j.Logger;
 
 import intquant.trit.Trit;
+import intquant.trit.blocks.BlockModel;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.item.Item;
@@ -36,7 +37,7 @@ public class CommonProxy {
 	}
 	
 	public static Block makeBasicBlock(String name, Material material) {
-		return new Block(material).setUnlocalizedName(Trit.MODID+"."+name).setRegistryName(Trit.MODID, name);
+		return new BlockModel(material).setUnlocalizedName(Trit.MODID+"."+name).setRegistryName(Trit.MODID, name);
 	}
 	public static Block addBasicBlock(String name, Material material) {
 		Block tmp = makeBasicBlock(name, material);
@@ -50,9 +51,9 @@ public class CommonProxy {
 		//GameRegistry.registerTileEntity(TileEntitySensor.class, "TileEntitySensor");
 		
 		addBasicBlock("chassis", Material.IRON);
-		addBasicBlock("flow_linker", Material.GLASS);
-		addBasicBlock("adapter", Material.GLASS);
-		addBasicBlock("vehicle_core", Material.GLASS);
+		addBasicBlock("flow_linker", Material.IRON);
+		addBasicBlock("adapter", Material.IRON);
+		addBasicBlock("vehicle_core", Material.IRON);
 		
 		
 		for (Block current : trit_blocks) {
