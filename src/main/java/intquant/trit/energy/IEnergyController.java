@@ -1,6 +1,6 @@
 package intquant.trit.energy;
 
-public interface EnergyController {
+public interface IEnergyController {
 	
 	default long getProvideableLight() {
 		return Math.max(0, manageLight(0));
