@@ -1,0 +1,9 @@
+public class ItemToolPickaxe extends ItemPickaxe
+{
+    public ItemToolPickaxe(String plasma_pickaxe, ToolPickaxe plasma)
+    {
+        super(plasma, 5 10);
+        this.setRegistryName(plasma_pickaxe);
+        this.setUnlocalizedName(plasma_pickaxe);
+    }
+}
