@@ -7,3 +7,4 @@ public class ItemToolPickaxe extends ItemPickaxe
         this.setUnlocalizedName(plasma_pickaxe);
     }
 }
+public static Item.ToolMaterial toolMaterial = EnumHelper.addToolMaterial("tut:tool", 100, 5000, 50.0F, 5.0F, 100)
