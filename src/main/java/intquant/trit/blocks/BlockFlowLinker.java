@@ -1,5 +1,6 @@
 package intquant.trit.blocks;
 
+import intquant.trit.blocks.tiles.TileFlowLinker;
 import intquant.trit.misc.FacingHelper;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.MapColor;
@@ -34,7 +35,7 @@ public class BlockFlowLinker extends BlockModel implements ITileEntityProvider {
 	@Override
 	public TileEntity createNewTileEntity(World worldIn, int meta) {
 		// TODO Auto-generated method stub
-		return null;
+		return new TileFlowLinker();
 	}
 	
     @Override
