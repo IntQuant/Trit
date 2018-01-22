@@ -6,6 +6,7 @@ import java.util.List;
 import org.apache.logging.log4j.Logger;
 
 import intquant.trit.Trit;
+import intquant.trit.blocks.BlockFlowLinker;
 import intquant.trit.blocks.BlockModel;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
@@ -36,13 +37,16 @@ public class CommonProxy {
 		return tmp;
 	}
 	
-	public static Block makeBasicBlock(String name, Material material) {
-		return new BlockModel(material).setUnlocalizedName(Trit.MODID+"."+name).setRegistryName(Trit.MODID, name);
-	}
-	public static Block addBasicBlock(String name, Material material) {
-		Block tmp = makeBasicBlock(name, material);
+	public static Block regBlock(Block block, String name) {
+		Block tmp = block.setUnlocalizedName(Trit.MODID+"."+name).setRegistryName(Trit.MODID, name);
 		trit_blocks.add(tmp);
 		return tmp;
+	}
+	public static Block makeBasicBlock(Material material) {
+		return new BlockModel(material);
+	}
+	public static Block addBasicBlock(String name, Material material) {
+		return regBlock(makeBasicBlock(material), name);
 	}
 	
 	@SubscribeEvent
@@ -51,9 +55,10 @@ public class CommonProxy {
 		//GameRegistry.registerTileEntity(TileEntitySensor.class, "TileEntitySensor");
 		
 		addBasicBlock("chassis", Material.IRON);
-		addBasicBlock("flow_linker", Material.IRON);
 		addBasicBlock("adapter", Material.IRON);
 		addBasicBlock("vehicle_core", Material.IRON);
+		
+		regBlock(new BlockFlowLinker(Material.IRON), "flow_linker");
 		
 		
 		for (Block current : trit_blocks) {
