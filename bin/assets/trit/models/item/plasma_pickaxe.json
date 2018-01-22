@@ -1,10 +1,1 @@
-public class ItemToolPickaxe extends ItemPickaxe
-{
-    public ItemToolPickaxe(String plasma_pickaxe, ToolPickaxe plasma)
-    {
-        super(plasma, 5 10);
-        this.setRegistryName(plasma_pickaxe);
-        this.setUnlocalizedName(plasma_pickaxe);
-    }
-}
-public static Item.ToolMaterial toolMaterial = EnumHelper.addToolMaterial("tut:tool", 100, 5000, 50.0F, 5.0F, 100)
+
