@@ -57,18 +57,18 @@ public class ItemNetworkConfigurator extends Item {
 			}
 			
 			BlockPos origin = new BlockPos(nbt.getInteger("x"), nbt.getInteger("y"), nbt.getInteger("z"));
-			if (nbt.getInteger("dim") == player.dimension) {
-				TileEntity tile = worldIn.getTileEntity(pos);
-				if (tile != null & tile instanceof TileFlowLinker) { 
-					try { //Just why not
-						if (((TileFlowLinker)tile).setControllerPos(origin))
-							CommonProxy.logger.info("Loaded block data");
-						
-					} catch (ClassCastException e) {
-						CommonProxy.logger.warn("Failed type casting while saving block data");
-					}
+			
+			TileEntity tile = worldIn.getTileEntity(pos);
+			if (tile != null & tile instanceof TileFlowLinker) { 
+				try { //Just why not
+					if (((TileFlowLinker)tile).setControllerPos(origin, nbt.getInteger("dim")))
+						CommonProxy.logger.info("Loaded block data");
+					
+				} catch (ClassCastException e) {
+					CommonProxy.logger.warn("Failed type casting while saving block data");
 				}
 			}
+			
 			return EnumActionResult.SUCCESS;
 		}
 		

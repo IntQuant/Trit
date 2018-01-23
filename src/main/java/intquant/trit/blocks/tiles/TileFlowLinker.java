@@ -6,6 +6,8 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
+import net.minecraftforge.common.DimensionManager;
 
 public class TileFlowLinker extends TileEntity implements ITickable{
 	
@@ -18,6 +20,7 @@ public class TileFlowLinker extends TileEntity implements ITickable{
 	
 	private TileFlowNetworkController controller = null;
 	private BlockPos controllerPos = null;
+	private int controllerDim = 0;
 	
 	private boolean isSeeking = false;
 	private int current = 0;
@@ -41,25 +44,40 @@ public class TileFlowLinker extends TileEntity implements ITickable{
 	}
 	
 	
-	public boolean setControllerPos(BlockPos pos) {
+	public boolean setControllerPos(BlockPos pos, int dim) {
 		//TODO add dimension handling
-		TileEntity tile = world.getTileEntity(pos);
-		
-		if (tile != null && tile instanceof TileFlowNetworkController) {
-			try {
-				controller = (TileFlowNetworkController)tile;
-				controllerPos = pos;
-				markDirty();
-				return true;
-			} catch (ClassCastException e) {
-				return false;
+		World worldC = DimensionManager.getWorld(dim);
+		if (worldC.isBlockLoaded(pos)) {
+			TileEntity tile = worldC.getTileEntity(pos);
+			if (tile != null && tile instanceof TileFlowNetworkController) {
+				try {
+					controller = (TileFlowNetworkController)tile;
+					controllerPos = pos;
+					controllerDim = dim;
+					markDirty();
+					return true;
+				} catch (ClassCastException e) {
+					return false;
+				}
+			} else {
+				controllerPos = null;
 			}
+		}
+		else {
+			controllerPos = pos;
+			controllerDim = dim;
+			markDirty();
 		}
 		return false;
 	}
 	
 	public void update() {
 		updateTokens = ITERATION_UPDATE_TOKENS;
+		
+		if (controller == null && controllerPos != null) {
+			setControllerPos(controllerPos, controllerDim);
+			return;
+		}
 		
 		if (isSeeking && controller != null) {			
 			while (current<maxCurrent & updateTokens>0) {
@@ -91,7 +109,7 @@ public class TileFlowLinker extends TileEntity implements ITickable{
         super.readFromNBT(compound);
         
         if (compound.hasKey("pos", 99)) {
-        	setControllerPos(BlockPos.fromLong(compound.getLong("pos")));
+        	setControllerPos(BlockPos.fromLong(compound.getLong("pos")), compound.getInteger("dim"));
         }
 	}
 	
@@ -100,6 +118,7 @@ public class TileFlowLinker extends TileEntity implements ITickable{
         super.writeToNBT(compound);
         
         compound.setLong("pos", controllerPos.toLong());
+        compound.setInteger("dim", controllerDim);
         
         return compound;
 	}
