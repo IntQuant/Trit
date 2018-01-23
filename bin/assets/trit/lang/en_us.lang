@@ -3,8 +3,17 @@ item.trit.crystal_material.name=Material crystal
 item.trit.crystal_spatial.name=Spatial crystal
 item.trit.ingot_obsidian.name=Obsidian ingot
 item.trit.leninade.name="Leninade"
+item.trit.network_configurator.name=Network configurator
 
 tile.trit.chassis.name=Chassis
 tile.trit.flow_linker.name=Flow linker
 tile.trit.adapter.name=Adapter
 tile.trit.vehicle_core.name=Vehicle core
+tile.trit.flow_network_controller.name=Flow Network Controller FNC
+tile.trit.solar_panel.name=Solar panel
+tile.trit..name=
+tile.trit..name=
+tile.trit..name=
+tile.trit..name=
+
+itemGroup.Trit=Trit

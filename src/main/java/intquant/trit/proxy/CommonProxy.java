@@ -80,6 +80,7 @@ public class CommonProxy {
 		
 		for (Block current : trit_blocks) {
 			event.getRegistry().register(current);
+			current.setCreativeTab(Trit.TCT);
 		}
 	}
 	
@@ -101,16 +102,17 @@ public class CommonProxy {
 		
 		for (Item current : trit_items) {
 			event.getRegistry().register(current);
+			current.setCreativeTab(Trit.TCT);
 		}
 		for (Block current : trit_blocks) {
-			event.getRegistry().register(new ItemBlock(current).setRegistryName(current.getRegistryName()));
+			event.getRegistry().register(new ItemBlock(current).setRegistryName(current.getRegistryName()).setCreativeTab(Trit.TCT));
 		}
 	}
 	    
 	
     public void preInit(FMLPreInitializationEvent event)
     {
-        logger = event.getModLog();
+    	logger = event.getModLog();
     }
     
     public void init(FMLInitializationEvent event)

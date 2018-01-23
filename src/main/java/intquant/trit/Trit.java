@@ -1,6 +1,8 @@
 package intquant.trit;
 
+import intquant.trit.misc.TritCreativeTab;
 import intquant.trit.proxy.CommonProxy;
+import net.minecraft.creativetab.CreativeTabs;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
@@ -14,6 +16,8 @@ public class Trit {
 	public static final String MODID   = "trit";
 	public static final String NAME    = "Trit";
 	public static final String VERSION = "0.0.1";
+	
+	public static final CreativeTabs TCT = new TritCreativeTab();
 	
 	@SidedProxy(clientSide = "intquant.trit.proxy.ClientProxy", serverSide = "intquant.trit.proxy.ServerProxy")
     public static CommonProxy proxy;
