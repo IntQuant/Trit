@@ -1,10 +1,10 @@
-﻿{
+{
 	"credit": "Made by Mecopy6ka",
 	"textures": {
-		"0": "blocks/bottom_texture",
-		"1": "blocks/32123",
-		"3": "blocks/321",
-		"particle": "blocks/bottom_texture"
+		"0": "trit:blocks/123",
+		"1": "trit:blocks/32123",
+		"3": "trit:blocks/321",
+		"particle": "trit:blocks/123"
 	},
 	"elements": [
 		{
