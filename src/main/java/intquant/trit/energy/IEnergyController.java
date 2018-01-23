@@ -1,5 +1,7 @@
 package intquant.trit.energy;
 
+import net.minecraft.util.math.BlockPos;
+
 public interface IEnergyController {
 	
 	default long getProvideableLight() {
@@ -23,6 +25,8 @@ public interface IEnergyController {
 	}
 	
 	boolean isValid();
+	void setLinker(BlockPos pos);
+	BlockPos getLinker();
 	
 	
 	//Should add value to energy and return result

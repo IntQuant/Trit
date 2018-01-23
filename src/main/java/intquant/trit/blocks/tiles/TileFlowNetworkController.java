@@ -32,7 +32,7 @@ public class TileFlowNetworkController extends TileEntity implements ITickable{
 	private long version = 0;
 	private long lastCheck = 0;
 	private boolean versionChange = false;
-	private static final long MINIFY_CHECK_TIME = 200; //TODO: change to bigger value
+	private static final long MINIFY_CHECK_TIME = 100; //TODO: change to bigger value
 	
 	public TileFlowNetworkController() {
 		controlled = new ArrayList<IEnergyController>();
@@ -41,50 +41,56 @@ public class TileFlowNetworkController extends TileEntity implements ITickable{
 	
 	@Nonnull
 	public IEnergyController getNext(Iterator<IEnergyController> iterator) {
-		if (iterator.hasNext()) {
+		if (iterator != null && iterator.hasNext()) {
 			return iterator.next();
 		} else {
 			iterator = controlled.iterator();
-			return iterator.next();
+			if (iterator.hasNext()) {
+				return iterator.next();
+			}
+			return null;
 		}
 	}
 	
 	@Override
 	public void update() {
+		
+		/*
 		if (world.getTotalWorldTime() - lastCheck > MINIFY_CHECK_TIME) {
 			CommonProxy.logger.info("Cleaning up controlled entities at {}, {}, {}", pos.getX(), pos.getY(), pos.getZ());
 			lastCheck = world.getTotalWorldTime();
 			controlled.removeIf(new ValidicyPredicate());
 		}
+		*/
 		
 		if (controlled.size()>0) {
 			iteration_score = MAX_ITERATIONS;
 			while (iteration_score>0) {
-				while (!(in != null & in.isValid() & in.getProvideableLight()>0)) {
+				while (iteration_score>0 && !(in != null && in.isValid() && in.getProvideableLight()>0)) {
 					iteration_score--;
 					in = getNext(lightIn);
 				}
-				while (!(out != null & out.isValid() & out.getAcceptableLight()>0)) {
+				while (iteration_score>0 && !(out != null && out.isValid() && out.getAcceptableLight()>0)) {
 					iteration_score--;
 					out = getNext(lightOut);
 				}
-				if (in != null & out != null & in.isValid() & out.isValid()) {
+				if (in != null && out != null && in.isValid() && out.isValid()) {
 					out.acceptLight(in.provideLight(out.getAcceptableLight()));
 				}
 				iteration_score--;				
 			}
 			
 			iteration_score = MAX_ITERATIONS;
-			while (iteration_score>0) {
-				while (!(in != null & in.isValid() & in.getProvideableForce()>0)) {
+			while (iteration_score>0 && iteration_score>0) {
+				while (iteration_score>0 && !(in != null && in.isValid() && in.getProvideableForce()>0)) {
 					iteration_score--;
 					in = getNext(forceIn);
 				}
-				while (!(out != null & out.isValid() & out.getAcceptableForce()>0)) {
+				while (iteration_score>0 && !(out != null && out.isValid() && out.getAcceptableForce()>0)) {
 					iteration_score--;
 					out = getNext(forceOut);
 				}
-				if (in != null & out != null & in.isValid() & out.isValid()) {
+				if (in != null && out != null && in.isValid() && out.isValid()) {
 					out.acceptForce(in.provideForce(out.getAcceptableForce()));
 				}
 				iteration_score--;				
@@ -92,15 +98,15 @@ public class TileFlowNetworkController extends TileEntity implements ITickable{
 			
 			iteration_score = MAX_ITERATIONS;
 			while (iteration_score>0) {
-				while (!(in != null & in.isValid() & in.getProvideableSpatial()>0)) {
+				while (iteration_score>0 && !(in != null && in.isValid() && in.getProvideableSpatial()>0)) {
 					iteration_score--;
 					in = getNext(spatialIn);
 				}
-				while (!(out != null & out.isValid() & out.getAcceptableSpatial()>0)) {
+				while (iteration_score>0 && !(out != null && out.isValid() && out.getAcceptableSpatial()>0)) {
 					iteration_score--;
 					out = getNext(spatialOut);
 				}
-				if (in != null & out != null & in.isValid() & out.isValid()) {
+				if (in != null && out != null && in.isValid() && out.isValid()) {
 					out.acceptSpatial(in.provideSpatial(out.getAcceptableSpatial()));
 				}
 				iteration_score--;				

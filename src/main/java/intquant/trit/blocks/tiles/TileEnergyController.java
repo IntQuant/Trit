@@ -1,20 +1,25 @@
 package intquant.trit.blocks.tiles;
 
 import intquant.trit.energy.IEnergyController;
+import intquant.trit.proxy.CommonProxy;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.math.BlockPos;
 
 public class TileEnergyController extends TileEntity implements IEnergyController {
-
+	
 	private long maxLightStorage = 0;
 	private long maxForceStorage = 0;
 	private long maxSpatialStorage = 0;
 	
-	private long lightStorage = 0;
-	private long forceStorage = 0;
-	private long spatialStorage = 0;
+	protected long lightStorage = 0;
+	protected long forceStorage = 0;
+	protected long spatialStorage = 0;
 	
 	private boolean doProvide = false;
 	private boolean doAccept  = false;
+	
+	private BlockPos linkerPos = null;
 	
 	@Override
 	public long getProvideableLight() {
@@ -57,16 +62,19 @@ public class TileEnergyController extends TileEntity implements IEnergyControlle
 	@Override
 	public long manageLight(long value) {
 		lightStorage += value;
+		markDirty();
 		return lightStorage;
 	}
 	@Override
 	public long manageForce(long value) {
 		forceStorage += value;
+		markDirty();
 		return forceStorage;
 	}
 	@Override
 	public long manageSpatial(long value) {
 		spatialStorage += value;
+		markDirty();
 		return spatialStorage;
 	}
 	
@@ -85,31 +93,88 @@ public class TileEnergyController extends TileEntity implements IEnergyControlle
 	}
 	public void setMaxForceStorage(long maxForceStorage) {
 		this.maxForceStorage = maxForceStorage;
+		markDirty();
 	}
 	public long getMaxSpatialStorage() {
 		return maxSpatialStorage;
 	}
 	public void setMaxSpatialStorage(long maxSpatialStorage) {
 		this.maxSpatialStorage = maxSpatialStorage;
+		markDirty();
 	}
 	public boolean isDoProvide() {
 		return doProvide;
 	}
 	public void setDoProvide(boolean doProvide) {
 		this.doProvide = doProvide;
+		markDirty();
 	}
 	public boolean isDoAccept() {
 		return doAccept;
 	}
 	public void setDoAccept(boolean doAccept) {
 		this.doAccept = doAccept;
+		markDirty();
 	}
+	public void setLinker(BlockPos pos) {
+		linkerPos = pos;
+		markDirty();
+	}
+	public BlockPos getLinker() {
+		return linkerPos;
+	}
+	
 	@Override
 	public boolean isValid() {
-		// TODO Auto-generated method stub
-		return this.isValid();
+		try {
+			return (!super.isInvalid()) && 
+					world != null && 
+					linkerPos != null && 
+					world.getBlockState(linkerPos).getBlock().equals(CommonProxy.BFL);
+		} catch (NullPointerException e) {
+			CommonProxy.logger.error("Null pointer exception while checking validicy");
+			return false; //No-one cares, actually
+		}
 	}
 	
-	
-
+	@Override
+    public void readFromNBT(NBTTagCompound compound) {
+        super.readFromNBT(compound);
+        
+        if (compound.hasKey("linker_pos", 99)) {
+        	linkerPos = BlockPos.fromLong(compound.getLong("linker_pos"));
+        }
+        
+        if (compound.hasKey("stor_light", 99)) lightStorage            = compound.getLong("stor_light");
+        if (compound.hasKey("stor_force", 99)) forceStorage            = compound.getLong("stor_force");
+        if (compound.hasKey("stor_spatial", 99)) spatialStorage        = compound.getLong("stor_spatial");
+        
+        if (compound.hasKey("max_stor_light", 99)) maxLightStorage     = compound.getLong("max_stor_light");
+        if (compound.hasKey("max_stor_force", 99)) maxForceStorage     = compound.getLong("max_stor_force");
+        if (compound.hasKey("max_stor_spatial", 99)) maxSpatialStorage = compound.getLong("max_stor_spatial");
+        
+        if (compound.hasKey("do_provide")) doProvide                   = compound.getBoolean("do_provide");
+        if (compound.hasKey("do_accept")) doAccept                     = compound.getBoolean("do_accept");
+	}
+	@Override
+    public NBTTagCompound writeToNBT(NBTTagCompound compound) {
+        super.writeToNBT(compound);
+        
+        if (linkerPos != null) {
+        	compound.setLong("linker_pos", linkerPos.toLong());
+        }
+        
+        compound.setLong("stor_light", lightStorage);
+        compound.setLong("stor_force", forceStorage);
+        compound.setLong("stor_spatial", spatialStorage);
+        
+        compound.setLong("max_stor_light", maxLightStorage);
+        compound.setLong("max_stor_force", maxForceStorage);
+        compound.setLong("max_stor_spatial", maxSpatialStorage);
+        
+        compound.setBoolean("do_provide", doProvide);
+        compound.setBoolean("do_accept", doAccept);
+        
+        return compound;
+	}
 }

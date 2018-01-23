@@ -9,8 +9,10 @@ import intquant.trit.Trit;
 import intquant.trit.blocks.BlockFlowLinker;
 import intquant.trit.blocks.BlockFlowNetworkController;
 import intquant.trit.blocks.BlockModel;
+import intquant.trit.blocks.BlockSolarPanel;
 import intquant.trit.blocks.tiles.TileFlowLinker;
 import intquant.trit.blocks.tiles.TileFlowNetworkController;
+import intquant.trit.blocks.tiles.TileSolarPanel;
 import intquant.trit.items.ItemNetworkConfigurator;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
@@ -63,18 +65,17 @@ public class CommonProxy {
 	
 	@SubscribeEvent
 	public static void registerBlocks(RegistryEvent.Register<Block> event) {
-		//event.getRegistry().register(new BlockSensor(Material.IRON).setUnlocalizedName("sensor").setRegistryName(OCSensors.MODID, "sensor"));
-		//GameRegistry.registerTileEntity(TileEntitySensor.class, "TileEntitySensor");
-		
 		addBasicBlock("chassis", Material.IRON);
 		addBasicBlock("adapter", Material.IRON);
 		addBasicBlock("vehicle_core", Material.IRON);
 		
 		BFL = regBlock(new BlockFlowLinker(Material.IRON), "flow_linker");
 		FNC = regBlock(new BlockFlowNetworkController(Material.IRON), "flow_network_controller");
+		regBlock(new BlockSolarPanel(Material.IRON), "solar_panel");
 		
 		GameRegistry.registerTileEntity(TileFlowNetworkController.class, "TileFlowNetworkController");
 		GameRegistry.registerTileEntity(TileFlowLinker.class, "TileFlowLinker");
+		GameRegistry.registerTileEntity(TileSolarPanel.class, "TileSolarPanel");
 		
 		
 		for (Block current : trit_blocks) {
