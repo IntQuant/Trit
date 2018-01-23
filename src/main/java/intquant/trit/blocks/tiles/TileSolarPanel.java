@@ -9,6 +9,8 @@ public class TileSolarPanel extends TileEnergyController implements ITickable{
 		this.setDoProvide(true);
 	}
 	public void update() {
-		this.manageLight(Math.min(this.getMaxLightStorage() - this.lightStorage, 1));
+		if (world.isDaytime()) {
+			this.manageLight(Math.min(this.getMaxLightStorage() - this.lightStorage, 1));
+		}
 	}
 }
