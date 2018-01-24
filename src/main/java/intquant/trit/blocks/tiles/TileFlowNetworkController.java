@@ -224,11 +224,11 @@ public class TileFlowNetworkController extends TileEnergyController implements I
 		if (world != null && world.isBlockLoaded(pos)) {
 			TileEntity tmp = world.getTileEntity(pos);
 			
-			if (tmp == null | tmp.equals(null)) {
+			if (tmp == null) {
 				return true;
 			}
 			
-			if (tmp instanceof IEnergyController) {
+			if (tmp instanceof IEnergyController && !controlled.contains(tmp)) {
 				controlledPositions.add(pos);
 				controlled.add((IEnergyController)tmp);
 				markDirty();
