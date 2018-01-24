@@ -24,6 +24,46 @@ public class ItemPowered extends Item implements IEnergyController {
 	protected int controllerDim = 0;
 	protected int updateTokens = 0;
 	
+	protected long light_st   = 0;
+	protected long force_st   = 0;
+	protected long spatial_st = 0;
+	
+	protected boolean no_load = true;
+	
+	protected long max_light_st   = 0;
+	protected long max_force_st   = 0;
+	protected long max_spatial_st = 0;
+	
+	@Override
+	public long getAcceptableLight() {
+		return max_light_st - light_st;
+	}
+
+	@Override
+	public long getAcceptableForce() {
+		return max_force_st - force_st;
+	}
+
+	@Override
+	public long getAcceptableSpatial() {
+		return max_spatial_st - spatial_st;
+	}
+
+	@Override
+	public long manageLight(long value) {
+		return light_st += value;
+	}
+
+	@Override
+	public long manageForce(long value) {
+		return force_st += value;
+	}
+
+	@Override
+	public long manageSpatial(long value) {
+		return spatial_st += value;
+	}
+
 	public ItemPowered() {
 		super();
 	}
@@ -84,6 +124,10 @@ public class ItemPowered extends Item implements IEnergyController {
 	}
 	
 	public void tokenizedUpdate(ItemStack stack, World worldIn, Entity entityIn, int itemSlot, boolean isSelected) {
+		if (worldIn == null || worldIn.isRemote) {
+			return;
+		}
+		
 		if ((controller==null || controller.isInvalid()) && controllerPos!=null) {
 			World worldC = DimensionManager.getWorld(controllerDim);
 			if (worldC.isBlockLoaded(controllerPos)) {
@@ -99,6 +143,7 @@ public class ItemPowered extends Item implements IEnergyController {
 		}
 		if (controllerPos==null) {
 			NBTTagCompound nbt = stack.getTagCompound();
+			if (nbt == null) nbt = new NBTTagCompound();
 			if (nbt.hasKey("x") && nbt.hasKey("y") && nbt.hasKey("z") && nbt.hasKey("dim")) {
 				controllerPos = new BlockPos(nbt.getInteger("x"), nbt.getInteger("y"), nbt.getInteger("z"));
 				controllerDim = nbt.getInteger("dim");
@@ -106,6 +151,25 @@ public class ItemPowered extends Item implements IEnergyController {
 			}
 		}
 		if (controller != null && controller.isValid()) {
+			NBTTagCompound nbt = stack.getTagCompound();
+			if (nbt == null) nbt = new NBTTagCompound();
+			
+			if (no_load) {
+				if (nbt.hasKey("le", 99)) {
+					light_st = nbt.getLong("le");
+				}
+				
+				if (nbt.hasKey("fe", 99)) {
+					force_st = nbt.getLong("fe");
+				}
+				
+				if (nbt.hasKey("se", 99)) {
+					spatial_st = nbt.getLong("se");
+				}
+			}
+			
+			no_load = false;
+				
 			long acc = 0;
 			acc = Math.min(controller.getForcedProvideableLight(), this.getAcceptableLight());
 			controller.manageLight(-acc);
@@ -118,6 +182,12 @@ public class ItemPowered extends Item implements IEnergyController {
 			acc = Math.min(controller.getForcedProvideableSpatial(), this.getAcceptableSpatial());
 			controller.manageSpatial(-acc);
 			this.manageSpatial(acc);
+			
+			nbt.setLong("le", light_st);
+			nbt.setLong("fe", force_st);
+			nbt.setLong("se", spatial_st);
+			
+			stack.setTagCompound(nbt);
 		}
 	}
 	
