@@ -43,6 +43,18 @@ public class TileEnergyController extends TileEntity implements IEnergyControlle
 		return 0;
 	}
 	
+    public long getForcedProvideableLight() {
+        return Math.max(0, manageLight(0));
+	}
+	
+	public long getForcedProvideableForce() {
+        return Math.max(0, manageForce(0));
+	}
+	
+	public long getForcedProvideableSpatial() {
+        return Math.max(0, manageSpatial(0));
+	}
+	
 	@Override
 	public long getAcceptableLight() {
 		if (doAccept) return Math.max(0, getMaxLightStorage() - manageLight(0));
@@ -57,6 +69,18 @@ public class TileEnergyController extends TileEntity implements IEnergyControlle
 	public long getAcceptableSpatial() {
 		if (doAccept) return Math.max(0, getMaxSpatialStorage() - manageSpatial(0));
 		return 0;
+	}
+	
+    public long getForcedAcceptableLight() {
+        return Math.max(0, getMaxLightStorage() - manageLight(0));
+	}
+	
+	public long getForcedAcceptableForce() {
+	    return Math.max(0, getMaxForceStorage() - manageForce(0));
+	}
+	
+	public long getForcedAcceptableSpatial() {
+	    return Math.max(0, getMaxSpatialStorage() - manageSpatial(0));
 	}
 	
 	@Override
@@ -87,6 +111,7 @@ public class TileEnergyController extends TileEntity implements IEnergyControlle
 	}
 	public void setMaxLightStorage(long maxLightStorage) {
 		this.maxLightStorage = maxLightStorage;
+		markDirty();
 	}
 	public long getMaxForceStorage() {
 		return maxForceStorage;

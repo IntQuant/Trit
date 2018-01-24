@@ -58,6 +58,10 @@ public class ItemNetworkConfigurator extends Item {
 			
 			BlockPos origin = new BlockPos(nbt.getInteger("x"), nbt.getInteger("y"), nbt.getInteger("z"));
 			
+			if (nbt.getInteger("dim")!=player.dimension) {
+				return EnumActionResult.SUCCESS;
+			}
+			
 			TileEntity tile = worldIn.getTileEntity(pos);
 			if (tile != null & tile instanceof TileFlowLinker) { 
 				try { //Just why not
