@@ -6,24 +6,31 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 import javax.annotation.Nonnull;
 
+import intquant.trit.Trit;
 import intquant.trit.energy.IEnergyController;
 import intquant.trit.proxy.CommonProxy;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.math.BlockPos;
+import net.minecraftforge.common.ForgeChunkManager;
+import net.minecraftforge.common.ForgeChunkManager.Ticket;
+import net.minecraftforge.common.ForgeChunkManager.Type;
 
 public class TileFlowNetworkController extends TileEnergyController implements ITickable{
 	
-	private final int MAX_ITERATIONS = 16;
+	private final int MAX_ITERATIONS = 1;
+	
+	private Ticket chunk_ticket;
+	private String player;
 	
 	private List<IEnergyController> controlled;
 	private List<BlockPos> controlledPositions;
 	private List<BlockPos> potentialPositions;
 	
-	private Iterator<IEnergyController> lightIn, lightOut;
-	private Iterator<IEnergyController> forceIn, forceOut;
-	private Iterator<IEnergyController> spatialIn, spatialOut;
+	private Iterator<IEnergyController> LightIn, LightOut;
+	private Iterator<IEnergyController> ForceIn, ForceOut;
+	private Iterator<IEnergyController> SpatialIn, SpatialOut;
 	
 	private int iteration_score = 0;
 	
@@ -39,23 +46,93 @@ public class TileFlowNetworkController extends TileEnergyController implements I
 		controlledPositions = new CopyOnWriteArrayList<BlockPos>();
 		potentialPositions = new CopyOnWriteArrayList<BlockPos>();
 		this.setDoAccept(true);
-		this.setMaxLightStorage(1000);
-		this.setMaxForceStorage(1000);
-		this.setMaxSpatialStorage(1000);
+		this.setMaxLightStorage(10000);
+		this.setMaxForceStorage(10000);
+		this.setMaxSpatialStorage(10000);
 	}
 	
-	@Nonnull
-	public IEnergyController getNext(Iterator<IEnergyController> iterator) {
-		if (iterator != null && iterator.hasNext()) {
-			return iterator.next();
-		} else {
-			iterator = controlled.iterator();
-			return (IEnergyController) this;
-		}
-	}
+    @Nonnull
+    public IEnergyController getNextLightIn() {
+            if (LightIn != null && LightIn.hasNext()) {
+                    IEnergyController tmp = LightIn.next();
+                    return tmp;
+
+            } else {
+                    LightIn = controlled.iterator();
+                    return (IEnergyController) this;
+            }
+    }
+
+    @Nonnull
+    public IEnergyController getNextLightOut() {
+            if (LightOut != null && LightOut.hasNext()) {
+                    IEnergyController tmp = LightOut.next();
+                    return tmp;
+
+            } else {
+                    LightOut = controlled.iterator();
+                    return (IEnergyController) this;
+            }
+    }
+
+    @Nonnull
+    public IEnergyController getNextForceIn() {
+            if (ForceIn != null && ForceIn.hasNext()) {
+                    IEnergyController tmp = ForceIn.next();
+                    return tmp;
+
+            } else {
+                    ForceIn = controlled.iterator();
+                    return (IEnergyController) this;
+            }
+    }
+
+    @Nonnull
+    public IEnergyController getNextForceOut() {
+            if (ForceOut != null && ForceOut.hasNext()) {
+                    IEnergyController tmp = ForceOut.next();
+                    return tmp;
+
+            } else {
+                    ForceOut = controlled.iterator();
+                    return (IEnergyController) this;
+            }
+    }
+
+    @Nonnull
+    public IEnergyController getNextSpatialIn() {
+            if (SpatialIn != null && SpatialIn.hasNext()) {
+                    IEnergyController tmp = SpatialIn.next();
+                    return tmp;
+
+            } else {
+                    SpatialIn = controlled.iterator();
+                    return (IEnergyController) this;
+            }
+    }
+
+    @Nonnull
+    public IEnergyController getNextSpatialOut() {
+            if (SpatialOut != null && SpatialOut.hasNext()) {
+                    IEnergyController tmp = SpatialOut.next();
+                    return tmp;
+
+            } else {
+                    SpatialOut = controlled.iterator();
+                    return (IEnergyController) this;
+            }
+    }
 	
 	public int getControlledSize() {
 		return controlled.size();
+	}
+	
+	public void setPlayer(String name) {
+		player = name;
+	}
+	
+	public void unload() {
+		ForgeChunkManager.releaseTicket(chunk_ticket);
 	}
 	
 	@Override
@@ -73,20 +150,27 @@ public class TileFlowNetworkController extends TileEnergyController implements I
 			}
 		}
 		
+		if (chunk_ticket == null && player != null) {
+			chunk_ticket = ForgeChunkManager.requestPlayerTicket(Trit.instance, player, world, Type.NORMAL);
+			chunk_ticket.setChunkListDepth(1);
+			ForgeChunkManager.forceChunk(chunk_ticket, world.getChunkFromBlockCoords(pos).getPos());
+		}
 		
 		if (controlled.size()>0) {
 			iteration_score = MAX_ITERATIONS;
 			while (iteration_score>0) {
 				while (iteration_score>0 && !(in != null && in.isValid() && in.getProvideableLight()>0)) {
 					iteration_score--;
-					in = getNext(lightIn);
+					in = getNextLightIn();
+					//CommonProxy.logger.info("Changed light input to {}", in.getDebugId());
 				}
 				while (iteration_score>0 && !(out != null && out.isValid() && out.getAcceptableLight()>0)) {
 					iteration_score--;
-					out = getNext(lightOut);
+					out = getNextLightOut();
+					//CommonProxy.logger.info("Changed light output");
 				}
 				if (in != null && out != null && in.isValid() && out.isValid()) {
-					CommonProxy.logger.info("Initiated light transfer");
+					//CommonProxy.logger.info("Initiated light transfer");
 					out.acceptLight(in.provideLight(out.getAcceptableLight()));
 				}
 				iteration_score--;				
@@ -96,11 +180,11 @@ public class TileFlowNetworkController extends TileEnergyController implements I
 			while (iteration_score>0) {
 				while (iteration_score>0 && !(in != null && in.isValid() && in.getProvideableForce()>0)) {
 					iteration_score--;
-					in = getNext(forceIn);
+					in = getNextForceIn();
 				}
 				while (iteration_score>0 && !(out != null && out.isValid() && out.getAcceptableForce()>0)) {
 					iteration_score--;
-					out = getNext(forceOut);
+					out = getNextForceOut();
 				}
 				if (in != null && out != null && in.isValid() && out.isValid()) {
 					out.acceptForce(in.provideForce(out.getAcceptableForce()));
@@ -112,11 +196,11 @@ public class TileFlowNetworkController extends TileEnergyController implements I
 			while (iteration_score>0) {
 				while (iteration_score>0 && !(in != null && in.isValid() && in.getProvideableSpatial()>0)) {
 					iteration_score--;
-					in = getNext(spatialIn);
+					in = getNextSpatialIn();
 				}
 				while (iteration_score>0 && !(out != null && out.isValid() && out.getAcceptableSpatial()>0)) {
 					iteration_score--;
-					out = getNext(spatialOut);
+					out = getNextSpatialOut();
 				}
 				if (in != null && out != null && in.isValid() && out.isValid()) {
 					out.acceptSpatial(in.provideSpatial(out.getAcceptableSpatial()));

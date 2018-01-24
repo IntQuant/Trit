@@ -4,6 +4,10 @@ import net.minecraft.util.math.BlockPos;
 
 public interface IEnergyController {
 	
+	default public int getDebugId() {
+		return 0;
+	}
+	
 	default public  long getProvideableLight() {
 		return Math.max(0, manageLight(0));
 	}
@@ -66,7 +70,7 @@ public interface IEnergyController {
 	
 	default public  long acceptLight(long value) {
 		long targetValue = Math.min(getAcceptableLight(), value);
-		manageLight(-targetValue);
+		manageLight(targetValue);
 		return targetValue;
 	}
 	default public  long acceptForce(long value) {
