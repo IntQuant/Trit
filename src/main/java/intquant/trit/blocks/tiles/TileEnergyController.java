@@ -1,5 +1,6 @@
 package intquant.trit.blocks.tiles;
 
+import intquant.trit.Trit;
 import intquant.trit.energy.IEnergyController;
 import intquant.trit.proxy.CommonProxy;
 import net.minecraft.nbt.NBTTagCompound;
@@ -20,6 +21,14 @@ public class TileEnergyController extends TileEntity implements IEnergyControlle
 	private boolean doAccept  = false;
 	
 	private BlockPos linkerPos = null;
+	
+	private int id = 0;
+	
+	@Override
+	public int getDebugId() {
+		if (id==0) id = Trit.rand.nextInt();
+		return id; 
+	}
 	
 	@Override
 	public long getProvideableLight() {
