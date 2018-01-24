@@ -1,8 +1,8 @@
 package intquant.trit.blocks.tiles;
 
-import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import javax.annotation.Nonnull;
 
@@ -12,8 +12,6 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.math.BlockPos;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class TileFlowNetworkController extends TileEnergyController implements ITickable{
 	
@@ -37,9 +35,9 @@ public class TileFlowNetworkController extends TileEnergyController implements I
 	private static final long MINIFY_CHECK_TIME = 100; //TODO: change to bigger value
 	
 	public TileFlowNetworkController() {
-		controlled = new ArrayList<IEnergyController>();
-		controlledPositions = new ArrayList<BlockPos>();
-		potentialPositions = new ArrayList<BlockPos>();
+		controlled = new CopyOnWriteArrayList<IEnergyController>();
+		controlledPositions = new CopyOnWriteArrayList<BlockPos>();
+		potentialPositions = new CopyOnWriteArrayList<BlockPos>();
 		this.setDoAccept(true);
 		this.setMaxLightStorage(1000);
 		this.setMaxForceStorage(1000);
