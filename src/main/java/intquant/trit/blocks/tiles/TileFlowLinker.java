@@ -117,8 +117,10 @@ public class TileFlowLinker extends TileEntity implements ITickable{
     public NBTTagCompound writeToNBT(NBTTagCompound compound) {
         super.writeToNBT(compound);
         
-        compound.setLong("pos", controllerPos.toLong());
-        compound.setInteger("dim", controllerDim);
+        if (controllerPos != null) {
+        	compound.setLong("pos", controllerPos.toLong());
+        	compound.setInteger("dim", controllerDim);
+        }
         
         return compound;
 	}

@@ -5,6 +5,7 @@ item.trit.ingot_obsidian.name=Obsidian ingot
 item.trit.leninade.name="Leninade"
 item.trit.network_configurator.name=Network configurator
 
+
 tile.trit.chassis.name=Chassis
 tile.trit.flow_linker.name=Flow linker
 tile.trit.adapter.name=Adapter
@@ -16,4 +17,13 @@ tile.trit..name=
 tile.trit..name=
 tile.trit..name=
 
+
 itemGroup.Trit=Trit
+
+
+debug_msg.trit.block_name=Block name: %s
+debug_msg.trit.energy_controller_data_0=Is valid: %s, Energy: %d %d %d
+debug_msg.trit.energy_controller_data_1=Acceptable energy: %d %d %d
+debug_msg.trit.energy_controller_data_2=Provideable energy: %d %d %d
+
+debug_msg.trit.network_controller_data_0=Controlled entities %d

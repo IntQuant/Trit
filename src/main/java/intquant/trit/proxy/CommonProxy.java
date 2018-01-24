@@ -13,6 +13,7 @@ import intquant.trit.blocks.BlockSolarPanel;
 import intquant.trit.blocks.tiles.TileFlowLinker;
 import intquant.trit.blocks.tiles.TileFlowNetworkController;
 import intquant.trit.blocks.tiles.TileSolarPanel;
+import intquant.trit.items.ItemDebugTool;
 import intquant.trit.items.ItemNetworkConfigurator;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
@@ -95,6 +96,7 @@ public class CommonProxy {
 		addBasicItem("leninade");
 		
 		regItem(new ItemNetworkConfigurator(), "network_configurator");
+		regItem(new ItemDebugTool(), "tool_debug");
 		
 		logger.info("Done Item Registering");
 		
