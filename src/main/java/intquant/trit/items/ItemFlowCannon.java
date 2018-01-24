@@ -36,15 +36,22 @@ public class ItemFlowCannon extends ItemPowered {
 	
 	@Override
 	public void onUsingTick(ItemStack stack, EntityLivingBase player, int count) {
+		load(stack);
+		
 		if (light_st>=count*0.2) {
 			light_st -= count*0.2;
 			
 			int damage = (int)Math.pow(count/10, 1.2);
 			
-			total_damage += damage;
+			Vec3d hit = player.rayTrace(100, 0).hitVec;
 			
-			CommonProxy.logger.info("Current damage {}", total_damage);
+			player.world.createExplosion(null, hit.x, hit.y, hit.z, damage/10, true);
 			
+			
+			
+			CommonProxy.logger.info("Current damage {}", damage);
+			
+			save(stack);
 			return;
 		}
 		
@@ -68,19 +75,6 @@ public class ItemFlowCannon extends ItemPowered {
 		// TODO Auto-generated method stub
 		//total_damage = (int) Math.min((maxTime - timeLeft), light_st);
 		//light_st -= total_damage;
-		
-		CommonProxy.logger.info("Current damage {}", total_damage);	
-		
-		Vec3d hit = entityLiving.rayTrace(100, 0).hitVec;
-		
-		worldIn.createExplosion(null, hit.x, hit.y, hit.z, total_damage/10, true);
-		
+		//CommonProxy.logger.info("Current damage {}", total_damage);		
 	}
-
-	@Override
-	public void onUpdate(ItemStack stack, World worldIn, Entity entityIn, int itemSlot, boolean isSelected) {
-		// TODO Auto-generated method stub
-		super.onUpdate(stack, worldIn, entityIn, itemSlot, isSelected);
-	}
-
 }

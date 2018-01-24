@@ -28,8 +28,6 @@ public class ItemPowered extends Item implements IEnergyController {
 	protected long force_st   = 0;
 	protected long spatial_st = 0;
 	
-	protected boolean no_load = true;
-	
 	protected long max_light_st   = 0;
 	protected long max_force_st   = 0;
 	protected long max_spatial_st = 0;
@@ -107,6 +105,54 @@ public class ItemPowered extends Item implements IEnergyController {
 		
 		return super.onItemUse(player, worldIn, pos, hand, facing, hitX, hitY, hitZ);
 	}
+	
+	protected void load(ItemStack stack) {
+		NBTTagCompound nbt = stack.getTagCompound();
+		if (nbt == null) nbt = new NBTTagCompound();
+		
+		if (nbt.hasKey("x") && nbt.hasKey("y") && nbt.hasKey("z") && nbt.hasKey("dim")) {
+			controllerPos = new BlockPos(nbt.getInteger("x"), nbt.getInteger("y"), nbt.getInteger("z"));
+			controllerDim = nbt.getInteger("dim");
+			return;
+		}
+		
+		if (controllerPos!=null) {
+			World worldC = DimensionManager.getWorld(controllerDim);
+			if (worldC.isBlockLoaded(controllerPos)) {
+				TileEntity tile = worldC.getTileEntity(controllerPos);
+				if (tile != null && tile instanceof TileFlowNetworkController) {
+					controller = (TileFlowNetworkController) tile;
+				}
+				else {
+					controllerPos = null;
+				}
+			}
+		}
+		
+		if (nbt.hasKey("le", 99)) {
+			light_st = nbt.getLong("le");
+		}
+		
+		if (nbt.hasKey("fe", 99)) {
+			force_st = nbt.getLong("fe");
+		}
+		
+		if (nbt.hasKey("se", 99)) {
+			spatial_st = nbt.getLong("se");
+		}
+		
+		//stack.setTagCompound(nbt);
+	}
+	protected void save(ItemStack stack) {
+		NBTTagCompound nbt = stack.getTagCompound();
+		if (nbt == null) nbt = new NBTTagCompound();
+		
+		nbt.setLong("le", light_st);
+		nbt.setLong("fe", force_st);
+		nbt.setLong("se", spatial_st);
+		
+		stack.setTagCompound(nbt);
+	}
 
 	@Override
 	public void onUpdate(ItemStack stack, World worldIn, Entity entityIn, int itemSlot, boolean isSelected) {
@@ -115,7 +161,7 @@ public class ItemPowered extends Item implements IEnergyController {
 		} else {
 			updateTokens++;
 		}
-		if (updateTokens >= 50) {
+		if (updateTokens >= 200) {
 			updateTokens -= 50;
 			tokenizedUpdate(stack, worldIn, entityIn, itemSlot, isSelected);
 		}
@@ -128,47 +174,9 @@ public class ItemPowered extends Item implements IEnergyController {
 			return;
 		}
 		
-		if ((controller==null || controller.isInvalid()) && controllerPos!=null) {
-			World worldC = DimensionManager.getWorld(controllerDim);
-			if (worldC.isBlockLoaded(controllerPos)) {
-				TileEntity tile = worldC.getTileEntity(controllerPos);
-				if (tile != null && tile instanceof TileFlowNetworkController) {
-					controller = (TileFlowNetworkController) tile;
-					return;
-				}
-				else {
-					controllerPos = null;
-				}
-			}
-		}
-		if (controllerPos==null) {
-			NBTTagCompound nbt = stack.getTagCompound();
-			if (nbt == null) nbt = new NBTTagCompound();
-			if (nbt.hasKey("x") && nbt.hasKey("y") && nbt.hasKey("z") && nbt.hasKey("dim")) {
-				controllerPos = new BlockPos(nbt.getInteger("x"), nbt.getInteger("y"), nbt.getInteger("z"));
-				controllerDim = nbt.getInteger("dim");
-				return;
-			}
-		}
+		load(stack);
+		
 		if (controller != null && controller.isValid()) {
-			NBTTagCompound nbt = stack.getTagCompound();
-			if (nbt == null) nbt = new NBTTagCompound();
-			
-			if (no_load) {
-				if (nbt.hasKey("le", 99)) {
-					light_st = nbt.getLong("le");
-				}
-				
-				if (nbt.hasKey("fe", 99)) {
-					force_st = nbt.getLong("fe");
-				}
-				
-				if (nbt.hasKey("se", 99)) {
-					spatial_st = nbt.getLong("se");
-				}
-			}
-			
-			no_load = false;
 				
 			long acc = 0;
 			acc = Math.min(controller.getForcedProvideableLight(), this.getAcceptableLight());
@@ -183,12 +191,10 @@ public class ItemPowered extends Item implements IEnergyController {
 			controller.manageSpatial(-acc);
 			this.manageSpatial(acc);
 			
-			nbt.setLong("le", light_st);
-			nbt.setLong("fe", force_st);
-			nbt.setLong("se", spatial_st);
-			
-			stack.setTagCompound(nbt);
+			//stack.setTagCompound(nbt);
 		}
+		
+		save(stack);
 	}
 	
 	
