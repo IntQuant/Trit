@@ -26,7 +26,7 @@ public class ItemFlowCannon extends ItemPowered {
 	
 	public EnumAction getItemUseAction(ItemStack stack)
     {
-        return EnumAction.BOW;
+        return EnumAction.NONE;
     }
 	
 	public int getMaxItemUseDuration(ItemStack stack)

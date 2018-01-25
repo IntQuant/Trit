@@ -6,6 +6,7 @@ import intquant.trit.proxy.CommonProxy;
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.IInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -159,12 +160,12 @@ public class ItemPowered extends Item implements IEnergyController {
 	@Override
 	public void onUpdate(ItemStack stack, World worldIn, Entity entityIn, int itemSlot, boolean isSelected) {
 		if (isSelected) {
-			updateTokens += 10;
+			updateTokens += 2;
 		} else {
 			updateTokens++;
 		}
-		if (updateTokens >= 50) {
-			updateTokens -= 50;
+		if (updateTokens >= 100) {
+			updateTokens -= 100;
 			tokenizedUpdate(stack, worldIn, entityIn, itemSlot, isSelected);
 		}
 		// TODO Auto-generated method stub
