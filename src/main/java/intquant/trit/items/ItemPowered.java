@@ -113,7 +113,6 @@ public class ItemPowered extends Item implements IEnergyController {
 		if (nbt.hasKey("x") && nbt.hasKey("y") && nbt.hasKey("z") && nbt.hasKey("dim")) {
 			controllerPos = new BlockPos(nbt.getInteger("x"), nbt.getInteger("y"), nbt.getInteger("z"));
 			controllerDim = nbt.getInteger("dim");
-			return;
 		}
 		
 		if (controllerPos!=null) {
@@ -141,6 +140,7 @@ public class ItemPowered extends Item implements IEnergyController {
 			spatial_st = nbt.getLong("se");
 		}
 		
+		CommonProxy.logger.info("Loaded data from item");
 		//stack.setTagCompound(nbt);
 	}
 	protected void save(ItemStack stack) {
@@ -152,6 +152,8 @@ public class ItemPowered extends Item implements IEnergyController {
 		nbt.setLong("se", spatial_st);
 		
 		stack.setTagCompound(nbt);
+		
+		CommonProxy.logger.info("Saved data to item");
 	}
 
 	@Override
@@ -161,7 +163,7 @@ public class ItemPowered extends Item implements IEnergyController {
 		} else {
 			updateTokens++;
 		}
-		if (updateTokens >= 200) {
+		if (updateTokens >= 50) {
 			updateTokens -= 50;
 			tokenizedUpdate(stack, worldIn, entityIn, itemSlot, isSelected);
 		}
