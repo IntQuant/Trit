@@ -4,6 +4,7 @@ item.trit.crystal_spatial.name=Spatial crystal
 item.trit.ingot_obsidian.name=Obsidian ingot
 item.trit.leninade.name="Leninade"
 item.trit.network_configurator.name=Network configurator
+item.trit.tool_flow_cannon.name=Flow cannon
 
 
 tile.trit.chassis.name=Chassis
