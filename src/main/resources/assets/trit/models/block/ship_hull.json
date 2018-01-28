@@ -1,0 +1,38 @@
+﻿{
+	"credit": "Made by Mecopy6ka",
+	"textures": {
+		"0": "trit:blocks/732145",
+		"particle": "trit:blocks/732145"
+	},
+	"elements": [
+		{
+			"name": "cube",
+			"from": [0, 0, 0],
+			"to": [16, 16, 16],
+			"faces": {
+				"north": {"uv": [0, 0, 16, 16], "texture": "#0"},
+				"east": {
+					"uv": [0, 0, 16, 16],
+					"texture": "#0",
+					"rotation": 90
+				},
+				"south": {"uv": [0, 0, 16, 16], "texture": "#0"},
+				"west": {"uv": [0, 0, 16, 16], "texture": "#0"},
+				"up": {"uv": [0, 0, 16, 16], "texture": "#0"},
+				"down": {"uv": [0, 0, 16, 16], "texture": "#0"}
+			},
+			"type": "cube"
+		}
+	],
+	"display": {
+		"thirdperson_righthand": {"scale": [0.5, 0.5, 0.5]},
+		"thirdperson_lefthand": {"scale": [0.5, 0.5, 0.5]},
+		"firstperson_righthand": {"scale": [0.5, 0.5, 0.525]},
+		"firstperson_lefthand": {"scale": [0.5, 0.5, 0.5]},
+		"ground": {"scale": [0.5, 0.5, 0.5]},
+		"gui": {
+			"scale": [0.6, 0.6, 0.6],
+			"rotation": [30, 45, 0]
+		}
+	}
+}
