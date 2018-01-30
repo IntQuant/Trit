@@ -1,8 +1,8 @@
 ﻿{
 	"credit": "Made by Mecopy6ka",
 	"textures": {
-		"0": "trit:blocks/543562253",
-		"particle": "trit:blocks/543562253"
+		"0": "trit:blocks/12345",
+		"particle": "trit:blocks/12345"
 	},
 	"elements": [
 		{
