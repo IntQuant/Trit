@@ -1,12 +1,15 @@
 package intquant.trit.proxy;
 
 import intquant.trit.Trit;
+import intquant.trit.TESR.TESRFlowNetworkController;
+import intquant.trit.blocks.tiles.TileFlowNetworkController;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.item.Item;
 import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.client.model.obj.OBJLoader;
+import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -30,5 +33,7 @@ public class ClientProxy extends CommonProxy {
     		CommonProxy.logger.info("Registering model {}", current.getRegistryName());
     		ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(current), 0, new ModelResourceLocation(current.getRegistryName(), "inventory"));
     	}
+    	
+    	ClientRegistry.bindTileEntitySpecialRenderer(TileFlowNetworkController.class, new TESRFlowNetworkController());
     }
 }

@@ -4,6 +4,7 @@ item.trit.crystal_spatial.name=Пространственный кристал
 item.trit.ingot_obsidian.name=Обсидиановый слиток
 item.trit.leninade.name="Ленинад"
 item.trit.network_configurator.name=Настройщик сети
+item.trit.tool_flow_cannon.name=Потоковая пушка
 
 tile.trit.chassis.name=Машинный блок
 tile.trit.flow_linker.name=Манипулятор потока

@@ -141,7 +141,7 @@ public class ItemPowered extends Item implements IEnergyController {
 			spatial_st = nbt.getLong("se");
 		}
 		
-		CommonProxy.logger.info("Loaded data from item");
+		//CommonProxy.logger.info("Loaded data from item");
 		//stack.setTagCompound(nbt);
 	}
 	protected void save(ItemStack stack) {
@@ -154,7 +154,7 @@ public class ItemPowered extends Item implements IEnergyController {
 		
 		stack.setTagCompound(nbt);
 		
-		CommonProxy.logger.info("Saved data to item");
+		//CommonProxy.logger.info("Saved data to item");
 	}
 
 	@Override
