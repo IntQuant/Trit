@@ -1,12 +1,14 @@
 package intquant.trit.items;
 
+import java.util.List;
+
 import intquant.trit.blocks.tiles.TileFlowNetworkController;
 import intquant.trit.energy.IEnergyController;
 import intquant.trit.proxy.CommonProxy;
 import net.minecraft.block.Block;
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.IInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -107,6 +109,16 @@ public class ItemPowered extends Item implements IEnergyController {
 		return super.onItemUse(player, worldIn, pos, hand, facing, hitX, hitY, hitZ);
 	}
 	
+	@Override
+	public void addInformation(ItemStack stack, World worldIn, List<String> tooltip, ITooltipFlag flagIn) {
+		// TODO Auto-generated method stub
+		tooltip.add("Stores");
+		if (this.max_light_st>0) {tooltip.add("Light   "+this.light_st+"/"+this.max_light_st);}
+		if (this.max_force_st>0) {tooltip.add("Force   "+this.force_st+"/"+this.max_force_st);}
+		if (this.max_spatial_st>0) {tooltip.add("Spatial "+this.spatial_st+"/"+this.max_spatial_st);}
+		super.addInformation(stack, worldIn, tooltip, flagIn);
+	}
+
 	protected void load(ItemStack stack) {
 		NBTTagCompound nbt = stack.getTagCompound();
 		if (nbt == null) nbt = new NBTTagCompound();
