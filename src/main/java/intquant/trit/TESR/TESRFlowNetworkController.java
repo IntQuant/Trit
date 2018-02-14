@@ -18,7 +18,7 @@ public class TESRFlowNetworkController extends TileEntitySpecialRenderer<TileFlo
 	@Override
     public void render(TileFlowNetworkController te, double x, double y, double z, float partialTicks, int destroyStage, float alpha) {
 		//CommonProxy.logger.info("Rendering TESR at {} {} {}", x, y, z);
-		
+		/*
         GL11.glPushMatrix();
         GL11.glScaled(1, 1, 1);
         GL11.glTranslated(x, y, z);
@@ -51,6 +51,7 @@ public class TESRFlowNetworkController extends TileEntitySpecialRenderer<TileFlo
         GL11.glEnable(GL11.GL_TEXTURE_2D);
         
         GL11.glPopMatrix();
+        */
 	}
 	
 }
