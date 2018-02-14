@@ -17,6 +17,7 @@ import intquant.trit.blocks.tiles.TileForceTransiever;
 import intquant.trit.blocks.tiles.TileSolarPanel;
 import intquant.trit.items.ItemDebugTool;
 import intquant.trit.items.ItemFlowCannon;
+import intquant.trit.items.ItemForceSword;
 import intquant.trit.items.ItemNetworkConfigurator;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
@@ -103,6 +104,7 @@ public class CommonProxy {
 		regItem(new ItemNetworkConfigurator(), "network_configurator");
 		regItem(new ItemDebugTool(), "tool_debug");
 		regItem(new ItemFlowCannon(), "tool_flow_cannon");
+		regItem(new ItemForceSword(), "tool_force_sword");
 		
 		logger.info("Done Item Registering");
 		
