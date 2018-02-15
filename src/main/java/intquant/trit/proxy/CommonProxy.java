@@ -101,8 +101,10 @@ public class CommonProxy {
 		addBasicItem("ingot_obsidian");
 		addBasicItem("leninade");
 		
+		
 		regItem(new ItemNetworkConfigurator(), "network_configurator");
 		regItem(new ItemDebugTool(), "tool_debug");
+		
 		regItem(new ItemFlowCannon(), "tool_flow_cannon");
 		regItem(new ItemForceSword(), "tool_force_sword");
 		

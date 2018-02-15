@@ -8,7 +8,6 @@ import javax.annotation.Nonnull;
 
 import intquant.trit.Trit;
 import intquant.trit.energy.IEnergyController;
-import intquant.trit.proxy.CommonProxy;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ITickable;
@@ -39,7 +38,7 @@ public class TileFlowNetworkController extends TileEnergyController implements I
 	private long version = 0;
 	private long lastCheck = 0;
 	private boolean versionChange = false;
-	private static final long MINIFY_CHECK_TIME = 100; //TODO: change to bigger value
+	private static final long MINIFY_CHECK_TIME = 20000;
 	
 	public TileFlowNetworkController() {
 		controlled = new CopyOnWriteArrayList<IEnergyController>();
@@ -140,9 +139,7 @@ public class TileFlowNetworkController extends TileEnergyController implements I
 		
 		
 		if (world.getTotalWorldTime() - lastCheck > MINIFY_CHECK_TIME) {
-			//CommonProxy.logger.info("Cleaning up controlled entities at {}, {}, {}", pos.getX(), pos.getY(), pos.getZ());
 			lastCheck = world.getTotalWorldTime();
-			//controlled.removeIf(new ValidicyPredicate());
 			for (BlockPos pos : potentialPositions) {
 				if (this.addControlled(pos)) {
 					potentialPositions.remove(pos);
@@ -162,15 +159,12 @@ public class TileFlowNetworkController extends TileEnergyController implements I
 				while (iteration_score>0 && !(in != null && in.isValid() && in.getProvideableLight()>0)) {
 					iteration_score--;
 					in = getNextLightIn();
-					//CommonProxy.logger.info("Changed light input to {}", in.getDebugId());
 				}
 				while (iteration_score>0 && !(out != null && out.isValid() && out.getAcceptableLight()>0)) {
 					iteration_score--;
 					out = getNextLightOut();
-					//CommonProxy.logger.info("Changed light output");
 				}
 				if (in != null && out != null && in.isValid() && out.isValid()) {
-					//CommonProxy.logger.info("Initiated light transfer");
 					out.acceptLight(in.provideLight(out.getAcceptableLight()));
 				}
 				iteration_score--;				
@@ -228,7 +222,7 @@ public class TileFlowNetworkController extends TileEnergyController implements I
 				return true;
 			}
 			
-			if (tmp instanceof IEnergyController && !controlled.contains(tmp)) {
+			if (tmp instanceof IEnergyController && !controlled.contains((IEnergyController)tmp)) {
 				controlledPositions.add(pos);
 				controlled.add((IEnergyController)tmp);
 				markDirty();
@@ -254,8 +248,6 @@ public class TileFlowNetworkController extends TileEnergyController implements I
             compound.hasKey("controlled_x") &&
             compound.hasKey("controlled_y") && 
             compound.hasKey("controlled_z")) {
-        	
-            CommonProxy.logger.info("Loading state of block at {} {} {} with version {}", this.pos.getX(), this.pos.getY(), this.pos.getZ(), version);
         	
         	version = compound.getLong("version");
         	versionChange = false;
@@ -283,10 +275,6 @@ public class TileFlowNetworkController extends TileEnergyController implements I
         if (world!=null && world.isRemote) {
         	return compound;
         }
-        
-        CommonProxy.logger.info("Saving state of block at {} {} {} with version {}", this.pos.getX(), this.pos.getY(), this.pos.getZ(), this.version);
-        
-        //controlled.removeIf(new ValidicyPredicate());        
         
         int curr = 0;
         int size = controlledPositions.size() + potentialPositions.size();

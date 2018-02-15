@@ -12,15 +12,10 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
 public class RayTrace {
-
-	public RayTrace() {
-		// TODO Auto-generated constructor stub
-	}
 	//http://www.minecraftforge.net/forum/topic/8454-ray-tracing-from-an-entitys-head-angle/
 	public static RayTraceResult tracePath(World world, float x, float y, float z, float tx, float ty, float tz, float borderSize, @Nullable HashSet<Entity> excluded)
 	  {
 	  Vec3d startVec = new Vec3d(x, y, z);
-	  Vec3d lookVec = new Vec3d(tx-x, ty-y, tz-z);
 	  Vec3d endVec = new Vec3d(tx, ty, tz);
 	  float minX = x < tx ? x : tx;
 	  float minY = y < ty ? y : ty;
@@ -33,15 +28,10 @@ public class RayTrace {
 	  RayTraceResult blockHit = world.rayTraceBlocks(startVec, endVec);
 	  startVec = new Vec3d(x, y, z);
 	  endVec = new Vec3d(tx, ty, tz);
-	  //float maxDistance = (float) endVec.distanceTo(startVec);
-	  //if(blockHit!=null)
-	  //  {
-	  //  maxDistance = (float) blockHit.hitVec.distanceTo(startVec);
-	  //  }  
 	  Entity closestHitEntity = null;
 	  float closestHit = Float.POSITIVE_INFINITY;
 	  float currentHit = 0.f;
-	  AxisAlignedBB entityBb;// = ent.getBoundingBox();
+	  AxisAlignedBB entityBb;
 	  RayTraceResult intercept;
 	  for(Entity ent : allEntities)
 	    {    
@@ -74,7 +64,6 @@ public class RayTrace {
 
 	public static RayTraceResult tracePath(World world, double x, double y, double z, double x2, double y2, double z2,
 			double d, @Nullable HashSet<Entity> excluded) {
-		// TODO Auto-generated method stub
 		return tracePath(world, (float)x, (float)y, (float)z, (float)x2, (float)y2, (float)z2, (float)d, excluded); 		
 	}
 	

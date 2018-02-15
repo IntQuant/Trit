@@ -12,11 +12,17 @@ import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 
 public class ItemNetworkConfigurator extends Item {
 	public EnumActionResult onItemUse(EntityPlayer player, World worldIn, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
 		Block blk = worldIn.getBlockState(pos).getBlock();
+		
+		if (worldIn.isRemote) {
+			return super.onItemUse(player, worldIn, pos, hand, facing, hitX, hitY, hitZ);
+		}
 		
 		if (blk != null & blk.equals(CommonProxy.FNC)) {
 			
@@ -36,7 +42,9 @@ public class ItemNetworkConfigurator extends Item {
 			
 			selected.setTagCompound(nbt);
 			
-			CommonProxy.logger.info("Saved block data");
+			TextComponentTranslation component = new TextComponentTranslation("msg.trit.linked_to");
+	        component.getStyle().setColor(TextFormatting.AQUA);
+	        player.sendStatusMessage(component, false);
 			
 			return EnumActionResult.SUCCESS;
 		}
@@ -65,8 +73,11 @@ public class ItemNetworkConfigurator extends Item {
 			TileEntity tile = worldIn.getTileEntity(pos);
 			if (tile != null & tile instanceof TileFlowLinker) { 
 				try { //Just why not
-					if (((TileFlowLinker)tile).setControllerPos(origin, nbt.getInteger("dim")))
-						CommonProxy.logger.info("Loaded block data");
+					if (((TileFlowLinker)tile).setControllerPos(origin, nbt.getInteger("dim"))) {
+						TextComponentTranslation component = new TextComponentTranslation("msg.trit.block_linked_to");
+			        	component.getStyle().setColor(TextFormatting.AQUA);
+			        	player.sendStatusMessage(component, false);
+					}
 					
 				} catch (ClassCastException e) {
 					CommonProxy.logger.warn("Failed type casting while saving block data");

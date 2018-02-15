@@ -17,67 +17,86 @@ import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import net.minecraftforge.common.DimensionManager;
 
 public class ItemPowered extends Item implements IEnergyController {
 	
 	protected TileFlowNetworkController controller = null;
+	
 	protected BlockPos controllerPos = null;
 	protected int controllerDim = 0;
+	
 	protected int updateTokens = 0;
+	
 	
 	protected long light_st   = 0;
 	protected long force_st   = 0;
 	protected long spatial_st = 0;
 	
+	
 	protected long max_light_st   = 0;
 	protected long max_force_st   = 0;
 	protected long max_spatial_st = 0;
+	
 	
 	@Override
 	public long getAcceptableLight() {
 		return max_light_st - light_st;
 	}
-
+	
+	
 	@Override
 	public long getAcceptableForce() {
 		return max_force_st - force_st;
 	}
-
+	
+	
 	@Override
 	public long getAcceptableSpatial() {
 		return max_spatial_st - spatial_st;
 	}
-
+	
+	
 	@Override
 	public long manageLight(long value) {
 		return light_st += value;
 	}
-
+	
+	
 	@Override
 	public long manageForce(long value) {
 		return force_st += value;
 	}
-
+	
+	
 	@Override
 	public long manageSpatial(long value) {
 		return spatial_st += value;
 	}
-
+	
+	
 	public ItemPowered() {
 		super();
 	}
 
+	
 	@Override
 	public boolean isValid() {
 		return true;
 	}
 	
+	
 	@Override
 	public EnumActionResult onItemUse(EntityPlayer player, World worldIn, BlockPos pos, EnumHand hand,
 			EnumFacing facing, float hitX, float hitY, float hitZ) {
-		// TODO Auto-generated method stub
+		if (worldIn.isRemote) {
+			return super.onItemUse(player, worldIn, pos, hand, facing, hitX, hitY, hitZ);
+		}
+		
+		
 		Block blk = worldIn.getBlockState(pos).getBlock();
 		
 		if (blk != null & blk.equals(CommonProxy.FNC)) {
@@ -101,13 +120,16 @@ public class ItemPowered extends Item implements IEnergyController {
 			controllerPos = pos;
 			controllerDim = player.dimension;
 			
-			CommonProxy.logger.info("Saved block data");
+			TextComponentTranslation component = new TextComponentTranslation("msg.trit.linked_to");
+	        component.getStyle().setColor(TextFormatting.AQUA);
+	        player.sendStatusMessage(component, false);
 			
 			return EnumActionResult.SUCCESS;
 		}
 		
 		return super.onItemUse(player, worldIn, pos, hand, facing, hitX, hitY, hitZ);
 	}
+	
 	
 	@Override
 	public void addInformation(ItemStack stack, World worldIn, List<String> tooltip, ITooltipFlag flagIn) {
@@ -118,7 +140,8 @@ public class ItemPowered extends Item implements IEnergyController {
 		if (this.max_spatial_st>0) {tooltip.add("Spatial "+this.spatial_st+"/"+this.max_spatial_st);}
 		super.addInformation(stack, worldIn, tooltip, flagIn);
 	}
-
+	
+	
 	protected void load(ItemStack stack) {
 		NBTTagCompound nbt = stack.getTagCompound();
 		if (nbt == null) nbt = new NBTTagCompound();
@@ -152,10 +175,9 @@ public class ItemPowered extends Item implements IEnergyController {
 		if (nbt.hasKey("se", 99)) {
 			spatial_st = nbt.getLong("se");
 		}
-		
-		//CommonProxy.logger.info("Loaded data from item");
-		//stack.setTagCompound(nbt);
 	}
+	
+	
 	protected void save(ItemStack stack) {
 		NBTTagCompound nbt = stack.getTagCompound();
 		if (nbt == null) nbt = new NBTTagCompound();
@@ -165,10 +187,9 @@ public class ItemPowered extends Item implements IEnergyController {
 		nbt.setLong("se", spatial_st);
 		
 		stack.setTagCompound(nbt);
-		
-		//CommonProxy.logger.info("Saved data to item");
 	}
-
+	
+	
 	@Override
 	public void onUpdate(ItemStack stack, World worldIn, Entity entityIn, int itemSlot, boolean isSelected) {
 		if (isSelected) {
@@ -180,9 +201,9 @@ public class ItemPowered extends Item implements IEnergyController {
 			updateTokens -= 100;
 			tokenizedUpdate(stack, worldIn, entityIn, itemSlot, isSelected);
 		}
-		// TODO Auto-generated method stub
 		super.onUpdate(stack, worldIn, entityIn, itemSlot, isSelected);
 	}
+	
 	
 	public void tokenizedUpdate(ItemStack stack, World worldIn, Entity entityIn, int itemSlot, boolean isSelected) {
 		if (worldIn == null || worldIn.isRemote) {
@@ -205,22 +226,18 @@ public class ItemPowered extends Item implements IEnergyController {
 			acc = Math.min(controller.getForcedProvideableSpatial(), this.getAcceptableSpatial());
 			controller.manageSpatial(-acc);
 			this.manageSpatial(acc);
-			
-			//stack.setTagCompound(nbt);
-		}
-		
+		}		
 		save(stack);
 	}
 	
 	
-
 	@Override
 	public void setLinker(BlockPos pos) {
 	}
 
+	
 	@Override
 	public BlockPos getLinker() {
 		return null;
 	}
-
 }

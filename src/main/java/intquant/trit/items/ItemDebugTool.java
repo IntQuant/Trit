@@ -17,13 +17,12 @@ import net.minecraft.world.World;
 public class ItemDebugTool extends Item {
 
 	public ItemDebugTool() {
-		// TODO Auto-generated constructor stub
+		super();
 	}
 	
 	@Override
 	public EnumActionResult onItemUse(EntityPlayer player, World worldIn, BlockPos pos, EnumHand hand,
 			EnumFacing facing, float hitX, float hitY, float hitZ) {
-		// TODO Auto-generated method stub
 		if (worldIn.isRemote) {
 			return EnumActionResult.SUCCESS;
 		}

@@ -26,5 +26,7 @@ debug_msg.trit.block_name=Block name: %s
 debug_msg.trit.energy_controller_data_0=Is valid: %s, Energy: %d %d %d
 debug_msg.trit.energy_controller_data_1=Acceptable energy: %d %d %d
 debug_msg.trit.energy_controller_data_2=Provideable energy: %d %d %d
-
 debug_msg.trit.network_controller_data_0=Controlled entities %d
+
+msg.trit.linked_to=Linked item to controller!
+msg.trit.block_linked_to=Linked block to controller!

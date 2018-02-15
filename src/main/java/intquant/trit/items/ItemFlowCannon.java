@@ -55,7 +55,6 @@ public class ItemFlowCannon extends ItemPowered {
 			//player.world.createExplosion(null, hit.x, hit.y, hit.z, damage/10, true);
 			
 			if (hit != null && hit.entityHit != null && hit.entityHit instanceof EntityLivingBase) {
-				CommonProxy.logger.info("Entity hit: {} {} {}", hit.entityHit.posX, hit.entityHit.posY, hit.entityHit.posZ);
 				((EntityLivingBase) hit.entityHit).attackEntityFrom(Trit.damage_source_light, damage);
 			}
 			

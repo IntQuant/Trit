@@ -1,15 +1,7 @@
 package intquant.trit.TESR;
 
-import org.lwjgl.opengl.GL11;
-
-import ibxm.Player;
 import intquant.trit.blocks.tiles.TileFlowNetworkController;
-import net.minecraft.client.renderer.BufferBuilder;
-import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
-import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
