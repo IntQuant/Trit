@@ -1,0 +1,19 @@
+{
+  "result": {
+    "item": "trit:chassis"
+  },
+  "pattern": [
+    "iii",
+    "ifi",
+    "iii"
+  ],
+  "type": "forge:ore_shaped",
+  "key": {
+    "f": {
+      "item": "trit:crystal_flow",
+    },
+    "i": {
+      "item": "trit:ingot_obsidian"
+    }
+  }
+}
