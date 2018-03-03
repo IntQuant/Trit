@@ -1,15 +1,15 @@
 {
   "result": {
-    "item": "trit:chassis"
+    "item": "trit:controller"
   },
   "pattern": [
-    "iii",
-    "ifi",
-    "iii"
+    "ici",
+    "ccc",
+    "ici"
   ],
   "type": "forge:ore_shaped",
   "key": {
-    "f": {
+    "c": {
       "item": "trit:crystal_flow"
     },
     "i": {

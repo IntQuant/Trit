@@ -1,19 +1,22 @@
 {
   "result": {
-    "item": "trit:chassis"
+    "item": "trit:adapter"
   },
   "pattern": [
-    "iii",
-    "ifi",
-    "iii"
+    "ici",
+    "coc",
+    "ici"
   ],
   "type": "forge:ore_shaped",
   "key": {
-    "f": {
+    "c": {
       "item": "trit:crystal_flow"
     },
     "i": {
       "item": "trit:ingot_obsidian"
+    }
+    "o": {
+      "item": "trit:glass_obsidian"
     }
   }
 }

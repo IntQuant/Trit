@@ -1,0 +1,19 @@
+{
+  "result": {
+    "item": "trit:vehicle_core"
+  },
+  "pattern": [
+    "ccc",
+    "coc",
+    "ccc"
+  ],
+  "type": "forge:ore_shaped",
+  "key": {
+    "c": {
+      "item": "trit:crystal_material"
+    },
+    "o": {
+      "item": "trit:crystal_spatial"
+    }
+  }
+}

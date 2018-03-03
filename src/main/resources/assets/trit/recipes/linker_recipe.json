@@ -1,19 +1,23 @@
 {
   "result": {
-    "item": "trit:chassis"
+    "item": "trit:flow_linker"
+	"count": "4"
   },
   "pattern": [
-    "iii",
-    "ifi",
-    "iii"
+    " c ",
+    "i i",
+    "imi"
   ],
   "type": "forge:ore_shaped",
   "key": {
-    "f": {
+    "c": {
       "item": "trit:crystal_flow"
     },
     "i": {
       "item": "trit:ingot_obsidian"
+    },
+    "m": {
+      "item": "trit:chassis"
     }
   }
 }
