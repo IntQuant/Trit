@@ -1,0 +1,10 @@
+{
+  "forge_marker": 1,
+  "defaults": {
+    "model": "trit:fuel_rod"
+  },
+  "variants": {
+    "normal": [{}],
+    "inventory": [{}]
+  }
+}

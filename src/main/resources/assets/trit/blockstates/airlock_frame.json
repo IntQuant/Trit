@@ -1,0 +1,10 @@
+{
+  "forge_marker": 1,
+  "defaults": {
+    "model": "trit:airlock_frame"
+  },
+  "variants": {
+    "normal": [{}],
+    "inventory": [{}]
+  }
+}
