@@ -6,7 +6,7 @@ item.trit.leninade.name="Ленинад"
 item.trit.network_configurator.name=Настройщик сети
 item.trit.tool_flow_cannon.name=Потоковая пушка
 item.trit.tool_debug.name=Debug tool
-item.trit.tool_force_sword.name=Силовой меч
+item.trit.tool_force_sword.name= Силовой меч
 item.trit..name=
 
 tile.trit.chassis.name=Машинный блок
