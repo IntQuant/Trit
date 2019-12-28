@@ -17,8 +17,7 @@ public class ItemForceSword extends ItemPowered {
 	
     @Override
 	public boolean onEntitySwing(EntityLivingBase entityLiving, ItemStack stack) {
-		// TODO Auto-generated method stub
-		this.manageForce(-100);
+		if (this.force_st>=10) this.manageForce(-10);
     	return super.onEntitySwing(entityLiving, stack);
 	}
 
@@ -29,7 +28,7 @@ public class ItemForceSword extends ItemPowered {
 
         if (equipmentSlot == EntityEquipmentSlot.MAINHAND)
         {
-            if (this.force_st>100) {
+            if (this.force_st>=10) {
             	multimap.put(SharedMonsterAttributes.ATTACK_DAMAGE.getName(), new AttributeModifier(ATTACK_DAMAGE_MODIFIER, "Weapon modifier", 10, 0));
             }
             multimap.put(SharedMonsterAttributes.ATTACK_SPEED.getName(), new AttributeModifier(ATTACK_SPEED_MODIFIER, "Weapon modifier", -1D, 0));

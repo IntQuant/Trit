@@ -1,0 +1,25 @@
+{
+  "result": {
+    "item": "trit:tool_force_sword"
+  },
+  "pattern": [
+    "coc",
+    "oci",
+    "cim"
+  ],
+  "type": "forge:ore_shaped",
+  "key": {
+    "c": {
+      "item": "trit:crystal_material"
+    },
+    "i": {
+      "item": "trit:ingot_obsidian"
+    },
+    "m": {
+      "item": "trit:chassis"
+    },
+    "o": {
+      "item": "trit:glass_obsidian"
+    }
+  }
+}

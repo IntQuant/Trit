@@ -9,16 +9,22 @@ public class TileSolarPanel extends TileEnergyController implements ITickable{
 	public TileSolarPanel() {
 		super();
 		this.setMaxLightStorage(1000);
+		this.setMaxForceStorage(100);
+		this.setMaxSpatialStorage(100);
 		this.setDoProvide(true);
 	}
 	public void update() {
 		updates++;
-		if (updates>=50) {
+		if (updates>50) {
 			updates = 0;
 			isValid = world.canBlockSeeSky(pos);
 		}
 		if (isValid && world.isDaytime() && !world.isRaining()) {
 			this.manageLight(Math.min(this.getMaxLightStorage() - this.lightStorage, 1));
+			if (updates % 10 == 0) {
+				this.manageForce(Math.min(this.getMaxForceStorage() - this.forceStorage, 1));
+				this.manageSpatial(Math.min(this.getMaxSpatialStorage() - this.spatialStorage, 1));
+			}
 		}
 	}
 }

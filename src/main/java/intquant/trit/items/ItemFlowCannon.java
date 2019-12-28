@@ -1,6 +1,8 @@
 package intquant.trit.items;
 
-import intquant.trit.Trit;
+import java.util.HashMap;
+import java.util.Map;
+
 import intquant.trit.misc.RayTrace;
 import intquant.trit.proxy.CommonProxy;
 import net.minecraft.entity.EntityLivingBase;
@@ -8,6 +10,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.EnumAction;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ActionResult;
+import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.RayTraceResult;
@@ -15,9 +18,8 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
 public class ItemFlowCannon extends ItemPowered {
-	
-	protected int total_damage = 0;
-	protected int maxTime = 1000;
+	protected int maxTime = 10;
+	protected Map<EntityPlayer, Long> last_use = new HashMap<>();
 	
 	public ItemFlowCannon() {
 		// TODO Auto-generated constructor stub
@@ -39,47 +41,47 @@ public class ItemFlowCannon extends ItemPowered {
 		if (player.world.isRemote) {
 			return;
 		}
-		
-		load(stack);
-		
-		if (light_st>=10) {
-			light_st -= 10;
-			
-			int damage = 1;
-			
-			Vec3d startPos =  player.getLookVec().normalize().scale(0.5).add(player.getPositionEyes(0));
-			Vec3d endPos = player.getLookVec().normalize().scale(100).add(startPos);
-			
-			RayTraceResult hit = RayTrace.tracePath(player.world, startPos, endPos, 0.2, null);
-			
-			//player.world.createExplosion(null, hit.x, hit.y, hit.z, damage/10, true);
-			
-			if (hit != null && hit.entityHit != null && hit.entityHit instanceof EntityLivingBase) {
-				((EntityLivingBase) hit.entityHit).attackEntityFrom(Trit.damage_source_light, damage);
-			}
-			
-			
-			
-			
-			
-			CommonProxy.logger.info("Current damage {}", damage);
-			
-			save(stack);
-			return;
-		}
-		
-		//CommonProxy.logger.info("Item tick");
-		
-		// TODO Auto-generated method stub
 		super.onUsingTick(stack, player, count);
 	}
 
 	@Override
 	public ActionResult<ItemStack> onItemRightClick(World worldIn, EntityPlayer playerIn, EnumHand handIn) {
-		total_damage = 0;
-		CommonProxy.logger.info("Item rightcliced");
-		// TODO Auto-generated method stub
+		if (playerIn.world.isRemote) {
+			return new ActionResult<ItemStack>(EnumActionResult.SUCCESS, playerIn.getHeldItem(handIn));
+		}
+		
 		playerIn.setActiveHand(handIn);
+		
+		ItemStack stack = playerIn.getActiveItemStack();
+
+		load(stack);
+
+		//CommonProxy.logger.info("last_use {} {}", last_use, worldIn.getTotalWorldTime());
+		
+		Long lu = last_use.get(playerIn);
+		if (lu == null) {
+			lu = 0l;
+		}
+
+		if (light_st>=100 && lu+10 < worldIn.getTotalWorldTime()) {
+			light_st -= 100;
+			last_use.put(playerIn, worldIn.getTotalWorldTime());
+			int damage = 10;
+			
+			Vec3d startPos =  playerIn.getLookVec().normalize().scale(0.5).add(playerIn.getPositionEyes(0));
+			Vec3d endPos = playerIn.getLookVec().normalize().scale(100).add(startPos);
+			
+			RayTraceResult hit = RayTrace.tracePath(playerIn.world, startPos, endPos, 0.2, null);
+			
+			//player.world.createExplosion(null, hit.x, hit.y, hit.z, damage/10, true);
+			
+			if (hit != null && hit.entityHit != null && hit.entityHit instanceof EntityLivingBase) {
+				((EntityLivingBase) hit.entityHit).attackEntityFrom(DamageSource.causePlayerDamage(playerIn), damage);
+			}
+			
+			save(stack);
+		}
+		
 		return new ActionResult<ItemStack>(EnumActionResult.SUCCESS, playerIn.getHeldItem(handIn));
 	}
 

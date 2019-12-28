@@ -1,0 +1,23 @@
+{
+    "result": {
+      "item": "trit:glass_obsidian",
+      "count": 8
+    },
+    "pattern": [
+      "grg",
+      "gmg",
+      "grg"
+    ],
+    "type": "forge:ore_shaped",
+    "key": {
+      "g": {
+        "item": "minecraft:glass"
+      },
+      "r": {
+        "item": "trit:ingot_obsidian"
+      },
+      "m": {
+        "item": "minecraft:obsidian"
+      }
+    }
+  }

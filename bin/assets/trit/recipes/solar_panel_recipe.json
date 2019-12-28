@@ -1,0 +1,28 @@
+{
+  "result": {
+    "item": "trit:solar_panel"
+  },
+  "pattern": [
+    "ccc",
+    "odo",
+    "imi"
+  ],
+  "type": "forge:ore_shaped",
+  "key": {
+    "c": {
+      "item": "trit:crystal_flow"
+    },
+    "i": {
+      "item": "trit:ingot_obsidian"
+    },
+    "m": {
+      "item": "trit:chassis"
+    },
+    "o": {
+      "item": "trit:glass_obsidian"
+    },
+    "d": {
+      "item": "minecraft:daylight_detector"
+    }
+  }
+}

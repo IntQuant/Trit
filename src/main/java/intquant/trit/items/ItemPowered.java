@@ -133,22 +133,34 @@ public class ItemPowered extends Item implements IEnergyController {
 	
 	@Override
 	public void addInformation(ItemStack stack, World worldIn, List<String> tooltip, ITooltipFlag flagIn) {
-		// TODO Auto-generated method stub
-		tooltip.add("Stores");
+		load(stack);
+		if (this.controllerPos == null) {
+			tooltip.add("Not connected");
+		}
+		tooltip.add("Stores:");
 		if (this.max_light_st>0) {tooltip.add("Light   "+this.light_st+"/"+this.max_light_st);}
 		if (this.max_force_st>0) {tooltip.add("Force   "+this.force_st+"/"+this.max_force_st);}
 		if (this.max_spatial_st>0) {tooltip.add("Spatial "+this.spatial_st+"/"+this.max_spatial_st);}
+	
 		super.addInformation(stack, worldIn, tooltip, flagIn);
 	}
 	
 	
 	protected void load(ItemStack stack) {
-		NBTTagCompound nbt = stack.getTagCompound();
-		if (nbt == null) nbt = new NBTTagCompound();
+		NBTTagCompound nbt = null;
+		controller = null;
+		if (stack == null) {
+			nbt = new NBTTagCompound();
+		} else {
+			nbt = stack.getTagCompound();
+			if (nbt == null) nbt = new NBTTagCompound();
+		}
 		
 		if (nbt.hasKey("x") && nbt.hasKey("y") && nbt.hasKey("z") && nbt.hasKey("dim")) {
 			controllerPos = new BlockPos(nbt.getInteger("x"), nbt.getInteger("y"), nbt.getInteger("z"));
 			controllerDim = nbt.getInteger("dim");
+		} else {
+			controllerPos = null;
 		}
 		
 		if (controllerPos!=null) {
@@ -166,15 +178,15 @@ public class ItemPowered extends Item implements IEnergyController {
 		
 		if (nbt.hasKey("le", 99)) {
 			light_st = nbt.getLong("le");
-		}
+		} else light_st = 0;
 		
 		if (nbt.hasKey("fe", 99)) {
 			force_st = nbt.getLong("fe");
-		}
+		} else force_st = 0;
 		
 		if (nbt.hasKey("se", 99)) {
 			spatial_st = nbt.getLong("se");
-		}
+		} else spatial_st = 0;
 	}
 	
 	
@@ -196,6 +208,10 @@ public class ItemPowered extends Item implements IEnergyController {
 			updateTokens += 2;
 		} else {
 			updateTokens++;
+		}
+		if (isSelected && updateTokens >= 20) {
+			updateTokens -= 20;
+			tokenizedUpdate(stack, worldIn, entityIn, itemSlot, isSelected);
 		}
 		if (updateTokens >= 100) {
 			updateTokens -= 100;

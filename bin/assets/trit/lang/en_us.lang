@@ -4,15 +4,9 @@ item.trit.crystal_spatial.name=Spatial crystal
 item.trit.ingot_obsidian.name=Obsidian ingot
 item.trit.leninade.name="Leninade"
 item.trit.network_configurator.name=Network configurator
-item.trit.tool_flow_cannon.name=Flow cannon
-item.trit.tool_debug.name= Debug tool
-item.trit.tool_force_sword.name= Force sword
-item.trit..name=
-item.trit..name=
-item.trit..name=
-item.trit..name=
-item.trit..name=
-item.trit..name=
+item.trit.tool_flow_cannon.name=Flow Cannon
+item.trit.tool_force_sword.name=Force Sword
+item.trit.tool_spatial_miner.name=Spatial Mining Device
 
 
 tile.trit.chassis.name=Chassis
@@ -21,7 +15,7 @@ tile.trit.adapter.name=Adapter
 tile.trit.vehicle_core.name=Vehicle core
 tile.trit.flow_network_controller.name=Flow Network Controller FNC
 tile.trit.solar_panel.name=Solar panel
-tile.trit.force_transiever.name=Force transiever
+tile.trit.glass_obsidian.name=Obsidian glass
 tile.trit..name=
 tile.trit..name=
 tile.trit..name=

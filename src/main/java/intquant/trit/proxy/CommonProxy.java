@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.logging.log4j.Logger;
-
 import intquant.trit.Trit;
 import intquant.trit.blocks.BlockFlowLinker;
 import intquant.trit.blocks.BlockFlowNetworkController;
@@ -19,6 +18,7 @@ import intquant.trit.items.ItemDebugTool;
 import intquant.trit.items.ItemFlowCannon;
 import intquant.trit.items.ItemForceSword;
 import intquant.trit.items.ItemNetworkConfigurator;
+import intquant.trit.items.ItemSpatialMiner;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.item.Item;
@@ -69,10 +69,13 @@ public class CommonProxy {
 	}
 	
 	@SubscribeEvent
+	@SuppressWarnings("deprecation")
 	public static void registerBlocks(RegistryEvent.Register<Block> event) {
 		addBasicBlock("chassis", Material.IRON);
 		addBasicBlock("adapter", Material.IRON);
 		addBasicBlock("vehicle_core", Material.IRON);
+		addBasicBlock("glass_obsidian", Material.GROUND);
+
 		
 		BFL = regBlock(new BlockFlowLinker(Material.IRON), "flow_linker");
 		FNC = regBlock(new BlockFlowNetworkController(Material.IRON), "flow_network_controller");
@@ -100,13 +103,14 @@ public class CommonProxy {
 		addBasicItem("crystal_spatial");
 		addBasicItem("ingot_obsidian");
 		addBasicItem("leninade");
-		
+		addBasicItem("controller");
 		
 		regItem(new ItemNetworkConfigurator(), "network_configurator");
 		regItem(new ItemDebugTool(), "tool_debug");
 		
 		regItem(new ItemFlowCannon(), "tool_flow_cannon");
 		regItem(new ItemForceSword(), "tool_force_sword");
+		regItem(new ItemSpatialMiner(), "tool_spatial_miner");
 		
 		logger.info("Done Item Registering");
 		

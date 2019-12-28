@@ -1,0 +1,24 @@
+{
+    "result": {
+      "item": "trit:crystal_flow",
+      "count": 4
+    },
+    "pattern": [
+      " r ",
+      "gmg",
+      " r "
+    ],
+    "type": "forge:ore_shaped",
+    "key": {
+      "g": {
+        "item": "minecraft:glass"
+      },
+      "r": {
+        "item": "minecraft:redstone"
+      },
+      "m": {
+        "item": "minecraft:dye",
+        "data": 4
+      }
+    }
+  }

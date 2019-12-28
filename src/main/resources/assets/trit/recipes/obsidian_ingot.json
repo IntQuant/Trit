@@ -1,0 +1,24 @@
+{
+    "result": {
+      "item": "trit:ingot_obsidian",
+      "count": 4
+    },
+    "pattern": [
+      " r ",
+      "gmg",
+      " r "
+    ],
+    "type": "forge:ore_shaped",
+    "key": {
+      "g": {
+        "item": "minecraft:iron_ingot"
+      },
+      "r": {
+        "item": "minecraft:obsidian"
+      },
+      "m": {
+        "item": "minecraft:coal",
+        "data": 0
+      }
+    }
+  }

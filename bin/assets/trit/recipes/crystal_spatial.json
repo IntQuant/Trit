@@ -1,0 +1,23 @@
+{
+    "result": {
+      "item": "trit:crystal_spatial",
+      "count": 4
+    },
+    "pattern": [
+      " r ",
+      "gmg",
+      " r "
+    ],
+    "type": "forge:ore_shaped",
+    "key": {
+      "g": {
+        "item": "minecraft:glass"
+      },
+      "r": {
+        "item": "minecraft:ender_pearl"
+      },
+      "m": {
+        "item": "minecraft:emerald"
+      }
+    }
+  }
