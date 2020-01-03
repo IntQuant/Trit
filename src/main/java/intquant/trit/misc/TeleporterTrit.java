@@ -33,7 +33,7 @@ public class TeleporterTrit extends Teleporter {
     public static void teleportToDimension(EntityPlayer player, int dimension, double x, double y, double z) {
         EntityPlayerMP entityPlayerMP = (EntityPlayerMP) player;
         
-        //player.addExperienceLevel(0);
+        player.addExperienceLevel(0);
         
         MinecraftServer server = player.getEntityWorld().getMinecraftServer();
         WorldServer worldServer = server.getWorld(dimension);

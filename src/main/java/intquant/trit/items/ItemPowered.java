@@ -141,7 +141,6 @@ public class ItemPowered extends Item implements IEnergyController {
 		if (this.max_light_st>0) {tooltip.add("Light   "+this.light_st+"/"+this.max_light_st);}
 		if (this.max_force_st>0) {tooltip.add("Force   "+this.force_st+"/"+this.max_force_st);}
 		if (this.max_spatial_st>0) {tooltip.add("Spatial "+this.spatial_st+"/"+this.max_spatial_st);}
-	
 		super.addInformation(stack, worldIn, tooltip, flagIn);
 	}
 	
@@ -165,7 +164,7 @@ public class ItemPowered extends Item implements IEnergyController {
 		
 		if (controllerPos!=null) {
 			World worldC = DimensionManager.getWorld(controllerDim);
-			if (worldC.isBlockLoaded(controllerPos)) {
+			if (worldC != null && worldC.isBlockLoaded(controllerPos)) {
 				TileEntity tile = worldC.getTileEntity(controllerPos);
 				if (tile != null && tile instanceof TileFlowNetworkController) {
 					controller = (TileFlowNetworkController) tile;

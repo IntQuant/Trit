@@ -20,9 +20,11 @@ import intquant.trit.items.ItemForceSword;
 import intquant.trit.items.ItemNetworkConfigurator;
 import intquant.trit.items.ItemSpatialMiner;
 import net.minecraft.block.Block;
+import net.minecraft.block.material.MapColor;
 import net.minecraft.block.material.Material;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
@@ -67,25 +69,29 @@ public class CommonProxy {
 	public static Block addBasicBlock(String name, Material material) {
 		return regBlock(makeBasicBlock(material), name);
 	}
+	public static ResourceLocation mkResoureLoc(String name) {
+		return new ResourceLocation(Trit.MODID, name);
+	}
 	
 	@SubscribeEvent
-	@SuppressWarnings("deprecation")
 	public static void registerBlocks(RegistryEvent.Register<Block> event) {
-		addBasicBlock("chassis", Material.IRON);
-		addBasicBlock("adapter", Material.IRON);
-		addBasicBlock("vehicle_core", Material.IRON);
-		addBasicBlock("glass_obsidian", Material.GROUND);
+		Material TritMat = new Material(MapColor.AIR);
+		
+		addBasicBlock("chassis", TritMat);
+		addBasicBlock("adapter", TritMat);
+		addBasicBlock("vehicle_core", TritMat);
+		addBasicBlock("glass_obsidian", TritMat);
 
 		
-		BFL = regBlock(new BlockFlowLinker(Material.IRON), "flow_linker");
-		FNC = regBlock(new BlockFlowNetworkController(Material.IRON), "flow_network_controller");
-		regBlock(new BlockSolarPanel(Material.IRON), "solar_panel");
-		regBlock(new BlockForceTransiever(Material.IRON), "force_transiever");
-		
-		GameRegistry.registerTileEntity(TileFlowNetworkController.class, "TileFlowNetworkController");
-		GameRegistry.registerTileEntity(TileFlowLinker.class, "TileFlowLinker");
-		GameRegistry.registerTileEntity(TileSolarPanel.class, "TileSolarPanel");
-		GameRegistry.registerTileEntity(TileForceTransiever.class, "TileForceTransiever");
+		BFL = regBlock(new BlockFlowLinker(TritMat), "flow_linker");
+		FNC = regBlock(new BlockFlowNetworkController(TritMat), "flow_network_controller");
+		regBlock(new BlockSolarPanel(TritMat), "solar_panel");
+		regBlock(new BlockForceTransiever(TritMat), "force_transiever");
+
+		GameRegistry.registerTileEntity(TileFlowNetworkController.class, mkResoureLoc("TileFlowNetworkController"));
+		GameRegistry.registerTileEntity(TileFlowLinker.class, mkResoureLoc("TileFlowLinker"));
+		GameRegistry.registerTileEntity(TileSolarPanel.class, mkResoureLoc("TileSolarPanel"));
+		GameRegistry.registerTileEntity(TileForceTransiever.class, mkResoureLoc("TileForceTransiever"));
 		
 		
 		for (Block current : trit_blocks) {
