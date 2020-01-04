@@ -49,7 +49,9 @@ public class BlockFlowLinker extends BlockModel implements ITileEntityProvider {
 
 	@Override
 	public TileEntity createNewTileEntity(World worldIn, int meta) {
-		return new TileFlowLinker();
+		IBlockState state = getStateFromMeta(meta);
+		int facing = state.getValue(FACING).getIndex();
+		return new TileFlowLinker(facing);
 	}
 	
     @Override

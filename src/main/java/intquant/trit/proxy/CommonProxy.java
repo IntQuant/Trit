@@ -25,6 +25,9 @@ import net.minecraft.block.material.Material;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.capabilities.CapabilityInject;
+import net.minecraftforge.energy.IEnergyStorage;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
@@ -44,6 +47,9 @@ public class CommonProxy {
 	public static List<Item> trit_items = new ArrayList<Item>();
 	public static List<Block> trit_blocks = new ArrayList<Block>();
 	
+	//@CapabilityInject(IEnergyStorage.class)
+	//public static Capability<IEnergyStorage> ENERGY_HANDLER_CAPABILITY = null;
+
 	public static Item regItem(Item item, String name) {
 		Item tmp = item.setUnlocalizedName(Trit.MODID+"."+name).setRegistryName(Trit.MODID, name);
 		trit_items.add(tmp);

@@ -3,14 +3,20 @@ package intquant.trit.blocks.tiles;
 import javax.annotation.Nullable;
 
 import intquant.trit.Trit;
+import intquant.trit.energy.FEConversionCapability;
+import intquant.trit.proxy.CommonProxy;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.energy.CapabilityEnergy;
+import net.minecraftforge.energy.IEnergyStorage;
 
 public class TileFlowLinker extends TileEnergyController implements ITickable {
 	private int tickCounter = 0;
@@ -19,21 +25,46 @@ public class TileFlowLinker extends TileEnergyController implements ITickable {
 	private int exchZ = 0;
 	public long rates[][] = new long[3][3];
 	protected long MaxRate = 1000;
+	int dir = 0;
 
-	public TileFlowLinker() {
+	//protected FEConversionCapability fe_handler;
+	public TileFlowLinker(int dir) {
 		super();
 		setMaxLightStorage(10000);
 		setMaxForceStorage(10000);
 		setMaxSpatialStorage(10000);
 		setDoAccept(true);
 		setDoProvide(true);
+		this.dir = dir;
+	}
+
+	public TileFlowLinker() {
+		super();
+		//fe_handler = new FEConversionCapability(this);
 	}
 
 	public int[] getLinkedDistances() {
 		int exchV[] = { exchX, exchY, exchZ };
 		return exchV;
 	}
+	/*
+	@Override
+	public boolean hasCapability(Capability<?> capability, EnumFacing facing) {
+		if (capability == CapabilityEnergy.ENERGY) {
+			return true;
+		}
+		return super.hasCapability(capability, facing);
+	}
 
+	@Override
+	@SuppressWarnings("unchecked")
+	public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
+		if (capability == CapabilityEnergy.ENERGY) {
+			return (T)fe_handler;
+		}
+		return super.getCapability(capability, facing);
+	}
+	*/
 	@Nullable
 	protected TileEnergyController getEnergyBlockAt(BlockPos bpos) {
 		TileEntity tile = world.getTileEntity(bpos);
@@ -66,6 +97,23 @@ public class TileFlowLinker extends TileEnergyController implements ITickable {
 			return;
 		if (pos == null || world == null)
 			return;
+
+		BlockPos placed_on = pos.offset(EnumFacing.getFront(dir).getOpposite());
+		TileEntity pon = world.getTileEntity(placed_on);
+		if (pon != null) {
+			IEnergyStorage cap = pon.getCapability(CapabilityEnergy.ENERGY, EnumFacing.getFront(dir));
+			if (cap != null) {
+				if (cap.canReceive()) {
+					int v = cap.receiveEnergy((int)manageLight(0), false);
+					manageLight(-v);
+				} else 
+				if (cap.canExtract()) {
+					int v = cap.extractEnergy((int)getAcceptableLight(), false);
+					manageLight(v);
+				}
+			}
+		}
+
 
 		tickCounter++;
 		if (tickCounter > 20 * 5) {
@@ -141,11 +189,15 @@ public class TileFlowLinker extends TileEnergyController implements ITickable {
 	@Override
 	public void readFromNBT(NBTTagCompound compound) {
 		super.readFromNBT(compound);
+		if (compound.hasKey("dir", 99)) {
+			dir = compound.getInteger("dir");
+		}
 	}
 
 	@Override
 	public NBTTagCompound writeToNBT(NBTTagCompound compound) {
 		super.writeToNBT(compound);
+		compound.setInteger("dir", dir);
 		return compound;
 	}
 

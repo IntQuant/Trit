@@ -5,6 +5,7 @@ import intquant.trit.TESR.TESRFlowLinker;
 import intquant.trit.TESR.TESRFlowNetworkController;
 import intquant.trit.blocks.tiles.TileFlowLinker;
 import intquant.trit.blocks.tiles.TileFlowNetworkController;
+import intquant.trit.blocks.tiles.TileSolarPanel;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.item.Item;
@@ -38,6 +39,8 @@ public class ClientProxy extends CommonProxy {
     	
 		CommonProxy.logger.info("Initializing TESR");
 		ClientRegistry.bindTileEntitySpecialRenderer(TileFlowNetworkController.class, new TESRFlowNetworkController());
-        ClientRegistry.bindTileEntitySpecialRenderer(TileFlowLinker.class, new TESRFlowLinker());
+		ClientRegistry.bindTileEntitySpecialRenderer(TileFlowLinker.class, new TESRFlowLinker());
+		ClientRegistry.bindTileEntitySpecialRenderer(TileSolarPanel.class, new TESRFlowLinker());
+		ClientRegistry.bindTileEntitySpecialRenderer(TileFlowNetworkController.class, new TESRFlowLinker());
     }
 }

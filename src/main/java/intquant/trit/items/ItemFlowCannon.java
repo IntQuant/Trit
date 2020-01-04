@@ -1,9 +1,11 @@
 package intquant.trit.items;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 
 import intquant.trit.misc.RayTrace;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.EnumAction;
@@ -70,7 +72,9 @@ public class ItemFlowCannon extends ItemPowered {
 			Vec3d startPos =  playerIn.getLookVec().normalize().scale(0.5).add(playerIn.getPositionEyes(0));
 			Vec3d endPos = playerIn.getLookVec().normalize().scale(100).add(startPos);
 			
-			RayTraceResult hit = RayTrace.tracePath(playerIn.world, startPos, endPos, 0.2, null);
+			HashSet<Entity> set = new HashSet<>();
+			set.add(playerIn);
+			RayTraceResult hit = RayTrace.tracePath(playerIn.world, startPos, endPos, 0.2, set);
 			
 			//player.world.createExplosion(null, hit.x, hit.y, hit.z, damage/10, true);
 			
