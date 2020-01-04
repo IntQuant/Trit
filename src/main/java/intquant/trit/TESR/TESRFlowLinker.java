@@ -43,8 +43,8 @@ public class TESRFlowLinker extends TileEntitySpecialRenderer<TileFlowLinker> {
             g /= amp;
             b /= amp;
 
-            //if (dist > 0 && Math.abs(amp)>20) {
-            if (dist > 0) {
+            if (dist > 0 && Math.abs(amp)>1) {
+            //if (dist > 0) {
                 //dist = 1;
                 renderBeam(dx*dist, dy*dist, dz*dist, r, g, b, amp);
             }

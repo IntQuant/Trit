@@ -107,7 +107,7 @@ public class CommonProxy {
 		addBasicItem("crystal_spatial");
 		addBasicItem("ingot_obsidian");
 		addBasicItem("leninade");
-		addBasicItem("controller");
+		//addBasicItem("controller");
 		
 		regItem(new ItemNetworkConfigurator(), "network_configurator");
 		regItem(new ItemDebugTool(), "tool_debug");

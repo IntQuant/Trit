@@ -14,7 +14,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
-import scala.swing.TextComponent;
 
 public class ItemDebugTool extends Item {
 
@@ -58,9 +57,9 @@ public class ItemDebugTool extends Item {
         if (tile != null && tile instanceof TileFlowNetworkController) {
         	TileFlowNetworkController ctrl = (TileFlowNetworkController) tile;
         	
-        	component = new TextComponentTranslation("debug_msg.trit.network_controller_data_0", ctrl.getControlledSize());
-            component.getStyle().setColor(TextFormatting.AQUA);
-            player.sendStatusMessage(component, false);
+        	//component = new TextComponentTranslation("debug_msg.trit.network_controller_data_0", ctrl.getControlledSize());
+            //component.getStyle().setColor(TextFormatting.AQUA);
+            //player.sendStatusMessage(component, false);
         }
 		
 		

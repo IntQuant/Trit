@@ -4,7 +4,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import intquant.trit.misc.RayTrace;
-import intquant.trit.proxy.CommonProxy;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.EnumAction;

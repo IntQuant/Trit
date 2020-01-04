@@ -19,4 +19,4 @@ run/*
 libraries/*
 run/*
 eclipse/*
-bin/*
+bin/**

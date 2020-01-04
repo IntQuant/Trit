@@ -1,7 +1,5 @@
 package intquant.trit.energy;
 
-import net.minecraft.util.math.BlockPos;
-
 public interface IEnergyController {
 	
 	default public int getDebugId() {
@@ -108,6 +106,19 @@ public interface IEnergyController {
 		}
 		if (type == 2) {
 			return getProvideableSpatial();
+		}
+		return 0;
+	}
+
+	default public long getStorableEnergy(int type) {
+		if (type == 0) {
+			return getMaxLightStorage();
+		}
+		if (type == 1) {
+			return getMaxForceStorage();
+		}
+		if (type == 2) {
+			return getMaxSpatialStorage();
 		}
 		return 0;
 	}

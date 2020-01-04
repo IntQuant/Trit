@@ -3,7 +3,6 @@ package intquant.trit.blocks.tiles;
 import javax.annotation.Nullable;
 
 import intquant.trit.Trit;
-import intquant.trit.proxy.CommonProxy;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
@@ -97,32 +96,40 @@ public class TileFlowLinker extends TileEnergyController implements ITickable {
 			return;
 
 		for (int energyId = 0; energyId < 3; energyId++) {
-			long energyTarget = (tile.getAcceptableEnergy(energyId) - tile.getProvideableEnergy(energyId))
-					- (getAcceptableEnergy(energyId) - getProvideableEnergy(energyId));
-			if (energyTarget > 10 && rates[sideId][energyId] < MaxRate) {
-				rates[sideId][energyId]++;
-			} else
-			if (energyTarget < -10 && rates[sideId][energyId] > -MaxRate) {
-				rates[sideId][energyId]--;
+			boolean isSelfUni = isDoAccept() && isDoProvide();
+			boolean isTileUni = tile.isDoAccept() && tile.isDoProvide();
+			if (isSelfUni && isTileUni) {
+				if (getAcceptableEnergy(energyId) > tile.getAcceptableEnergy(energyId)) {
+					long tr = (getAcceptableEnergy(energyId) - tile.getAcceptableEnergy(energyId)) / 2;
+					//long hv = getStorableEnergy(energyId) / 2;
+					//if (tile.manageEnergy(energyId, 0) < hv) continue;
+					//long tr = Math.min(hv - manageEnergy(energyId, 0), tile.manageEnergy(energyId, 0) - hv);
+					manageEnergy(energyId, tr);
+					tile.manageEnergy(energyId, -tr);
+					rates[sideId][energyId] = tr;
+				} else {
+					long tr = (tile.getAcceptableEnergy(energyId) - getAcceptableEnergy(energyId)) / 2;
+					//long hv = tile.getStorableEnergy(energyId) / 2;
+					//if (manageEnergy(energyId, 0) < hv) continue;
+					//long tr = Math.min(hv - tile.manageEnergy(energyId, 0), manageEnergy(energyId, 0) - hv);
+					tile.manageEnergy(energyId, tr);
+					manageEnergy(energyId, -tr);
+					rates[sideId][energyId] = tr;
+				}
 			} else {
-				if (Math.abs(rates[sideId][energyId]) > 0) rates[sideId][energyId] -= Math.copySign(1, rates[sideId][energyId]);
-			}
+				if (tile.isDoAccept()) {
+					long v = Math.min(tile.getAcceptableEnergy(energyId), getProvideableEnergy(energyId));
+					tile.manageEnergy(energyId, v);
+					manageEnergy(energyId, -v);
+					rates[sideId][energyId] = v;
+				}
+				if (tile.isDoProvide()) {
+					long v = Math.min(getAcceptableEnergy(energyId), tile.getProvideableEnergy(energyId));
+					manageEnergy(energyId, v);
+					tile.manageEnergy(energyId, -v);
+					rates[sideId][energyId] = v;
 
-			if (rates[sideId][energyId] > 10) {
-				
-				long v = Math.max(0l, Math.min(Math.min(Math.min(getProvideableEnergy(energyId), tile.getAcceptableEnergy(energyId)),
-								rates[sideId][energyId]-10), energyTarget));
-				//rates[sideId][energyId] = Math.min(rates[sideId][energyId], v);
-				tile.manageEnergy(energyId, v);
-				manageEnergy(energyId, -v);
-			}
-			if (rates[sideId][energyId] < -10) {
-				long v = Math.max(0l, Math.min(
-						Math.min(Math.min(tile.getProvideableEnergy(energyId), getAcceptableEnergy(energyId)),
-								-rates[sideId][energyId]-10), -energyTarget));
-				//rates[sideId][energyId] = -Math.min(-rates[sideId][energyId], v);
-				manageEnergy(energyId, v);
-				tile.manageEnergy(energyId, -v);
+				}
 			}
 		}
 	}

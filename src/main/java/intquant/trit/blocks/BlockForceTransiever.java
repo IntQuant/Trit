@@ -16,12 +16,10 @@ public class BlockForceTransiever extends BlockModel implements ITileEntityProvi
 
 	public BlockForceTransiever(Material materialIn) {
 		super(materialIn);
-		// TODO Auto-generated constructor stub
 	}
 
 	public BlockForceTransiever(Material blockMaterialIn, MapColor blockMapColorIn) {
 		super(blockMaterialIn, blockMapColorIn);
-		// TODO Auto-generated constructor stub
 	}
 	
 	private long sqr(double motionX) {
