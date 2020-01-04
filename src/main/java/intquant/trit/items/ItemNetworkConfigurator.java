@@ -73,11 +73,11 @@ public class ItemNetworkConfigurator extends Item {
 			TileEntity tile = worldIn.getTileEntity(pos);
 			if (tile != null & tile instanceof TileFlowLinker) { 
 				try { //Just why not
-					if (((TileFlowLinker)tile).setControllerPos(origin, nbt.getInteger("dim"))) {
-						TextComponentTranslation component = new TextComponentTranslation("msg.trit.block_linked_to");
-			        	component.getStyle().setColor(TextFormatting.AQUA);
-			        	player.sendStatusMessage(component, false);
-					}
+					//if (((TileFlowLinker)tile).setControllerPos(origin, nbt.getInteger("dim"))) {
+					//	TextComponentTranslation component = new TextComponentTranslation("msg.trit.block_linked_to");
+			        //	component.getStyle().setColor(TextFormatting.AQUA);
+			        //	player.sendStatusMessage(component, false);
+					//}
 					
 				} catch (ClassCastException e) {
 					CommonProxy.logger.warn("Failed type casting while saving block data");

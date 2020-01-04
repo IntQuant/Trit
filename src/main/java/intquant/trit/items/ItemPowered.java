@@ -246,12 +246,12 @@ public class ItemPowered extends Item implements IEnergyController {
 	}
 	
 	
-	@Override
+	//@Override
 	public void setLinker(BlockPos pos) {
 	}
 
 	
-	@Override
+	//@Override
 	public BlockPos getLinker() {
 		return null;
 	}

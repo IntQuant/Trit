@@ -1,7 +1,9 @@
 package intquant.trit.proxy;
 
 import intquant.trit.Trit;
+import intquant.trit.TESR.TESRFlowLinker;
 import intquant.trit.TESR.TESRFlowNetworkController;
+import intquant.trit.blocks.tiles.TileFlowLinker;
 import intquant.trit.blocks.tiles.TileFlowNetworkController;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
@@ -34,6 +36,8 @@ public class ClientProxy extends CommonProxy {
     		ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(current), 0, new ModelResourceLocation(current.getRegistryName(), "inventory"));
     	}
     	
-    	ClientRegistry.bindTileEntitySpecialRenderer(TileFlowNetworkController.class, new TESRFlowNetworkController());
+		CommonProxy.logger.info("Initializing TESR");
+		ClientRegistry.bindTileEntitySpecialRenderer(TileFlowNetworkController.class, new TESRFlowNetworkController());
+        ClientRegistry.bindTileEntitySpecialRenderer(TileFlowLinker.class, new TESRFlowLinker());
     }
 }

@@ -2,7 +2,7 @@ package intquant.trit.blocks.tiles;
 
 import net.minecraft.util.ITickable;
 
-public class TileSolarPanel extends TileEnergyController implements ITickable{
+public class TileSolarPanel extends TileFlowLinker implements ITickable{
 	private boolean isValid = false;
 	private int updates = 0;
 	
@@ -12,8 +12,10 @@ public class TileSolarPanel extends TileEnergyController implements ITickable{
 		this.setMaxForceStorage(100);
 		this.setMaxSpatialStorage(100);
 		this.setDoProvide(true);
+		this.setDoAccept(false);
 	}
 	public void update() {
+		super.update();
 		updates++;
 		if (updates>50) {
 			updates = 0;

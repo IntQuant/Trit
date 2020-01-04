@@ -1,131 +1,179 @@
 package intquant.trit.blocks.tiles;
 
-import intquant.trit.energy.IEnergyController;
+import javax.annotation.Nullable;
+
+import intquant.trit.Trit;
 import intquant.trit.proxy.CommonProxy;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.NetworkManager;
+import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ITickable;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
-import net.minecraftforge.common.DimensionManager;
 
-public class TileFlowLinker extends TileEntity implements ITickable{
-	
-	public static int cubeHalfRange = 8;
-	public static int cubeRange = cubeHalfRange*2+1;
-	public static int squaredRange = cubeRange * cubeRange;
-	public static int maxCurrent = squaredRange * cubeRange;
-	
-	public static int ITERATION_UPDATE_TOKENS = 32;
-	
-	private TileFlowNetworkController controller = null;
-	private BlockPos controllerPos = null;
-	private int controllerDim = 0;
-	
-	private boolean isSeeking = false;
-	private int current = 0;
-	private int updateTokens = 0;
-	
-	
+public class TileFlowLinker extends TileEnergyController implements ITickable {
+	private int tickCounter = 0;
+	private int exchX = 0;
+	private int exchY = 0;
+	private int exchZ = 0;
+	public long rates[][] = new long[3][3];
+	protected long MaxRate = 1000;
+
 	public TileFlowLinker() {
 		super();
-		// TODO Auto-generated constructor stub
+		setMaxLightStorage(10000);
+		setMaxForceStorage(10000);
+		setMaxSpatialStorage(10000);
+		setDoAccept(true);
+		setDoProvide(true);
 	}
-	public void setController(TileFlowNetworkController controller) {
-		this.controller = controller;
-	}
-	
-	public void startSeeking() {
-		if (!isSeeking) {
-			CommonProxy.logger.info("Started seeking for energy controllers");
-			current = 0;
-			isSeeking = true;
-		}
-	}
-	
-	
-	public boolean setControllerPos(BlockPos pos, int dim) {
-		//TODO add dimension handling
-		World worldC = DimensionManager.getWorld(dim);
-		if (worldC.isBlockLoaded(pos)) {
-			TileEntity tile = worldC.getTileEntity(pos);
-			if (tile != null && tile instanceof TileFlowNetworkController) {
-				try {
-					controller = (TileFlowNetworkController)tile;
-					controllerPos = pos;
-					controllerDim = dim;
-					markDirty();
-					return true;
-				} catch (ClassCastException e) {
-					return false;
-				}
-			} else {
-				controllerPos = null;
-			}
-		}
-		else {
-			controllerPos = pos;
-			controllerDim = dim;
-			markDirty();
-		}
-		return false;
-	}
-	
-	public void update() {
-		updateTokens = ITERATION_UPDATE_TOKENS;
-		
-		if (controller == null && controllerPos != null) {
-			setControllerPos(controllerPos, controllerDim);
-			return;
-		}
-		
-		if (isSeeking && controller != null) {			
-			while (current<maxCurrent & updateTokens>0) {
-				BlockPos currentPos = new BlockPos(current%cubeRange, current/cubeRange%cubeRange, current/squaredRange).add(-cubeHalfRange, -cubeHalfRange, -cubeHalfRange).add(this.pos);
-				
-				
-				//CommonProxy.logger.info("Seeking for IEnergyController-s, currently at {} {} {}", currentPos.getX(), currentPos.getY(), currentPos.getZ());
-				TileEntity tile = world.getTileEntity(currentPos);
-				if (tile != null && tile instanceof IEnergyController) {
-					IEnergyController c = (IEnergyController)tile;
-					CommonProxy.logger.info("Found energy controller");
-					if (!c.isValid()) {
-						CommonProxy.logger.info("Adding energy controller");
-						c.setLinker(pos);
-						controller.addControlled(currentPos);
-					}
-				}
-				current++;
-				updateTokens--;
-			}
-			if (current>=maxCurrent) {
-				isSeeking = false;
-			}
-		}
-	}
-	
-	@Override
-    public void readFromNBT(NBTTagCompound compound) {
-        super.readFromNBT(compound);
-        
-        if (compound.hasKey("pos", 99)) {
-        	setControllerPos(BlockPos.fromLong(compound.getLong("pos")), compound.getInteger("dim"));
-        }
-	}
-	
-	@Override
-    public NBTTagCompound writeToNBT(NBTTagCompound compound) {
-        super.writeToNBT(compound);
-        
-        if (controllerPos != null) {
-        	compound.setLong("pos", controllerPos.toLong());
-        	compound.setInteger("dim", controllerDim);
-        }
-        
-        return compound;
-	}
-	
-	
-	
 
+	public int[] getLinkedDistances() {
+		int exchV[] = { exchX, exchY, exchZ };
+		return exchV;
+	}
+
+	@Nullable
+	protected TileEnergyController getEnergyBlockAt(BlockPos bpos) {
+		TileEntity tile = world.getTileEntity(bpos);
+		if (tile != null && tile instanceof TileEnergyController) {
+			return (TileEnergyController) tile;
+		}
+		return null;
+	}
+
+	private int traceRay(BlockPos advance) {
+		int tokens = 15;
+		int res = 0;
+		BlockPos cpos = pos;
+		while (tokens-- > 0) {
+			res++;
+			cpos = cpos.add(advance);
+			if (!(world.isBlockLoaded(cpos) && world.isAirBlock(cpos))) {
+				break;
+			}
+		}
+		if (world.isBlockLoaded(cpos) && (getEnergyBlockAt(cpos) != null)) {
+			return res;
+		} else {
+			return 0;
+		}
+	}
+
+	public void update() {
+		if (world == null || world.isRemote)
+			return;
+		if (pos == null || world == null)
+			return;
+
+		tickCounter++;
+		if (tickCounter > 20 * 5) {
+			tickCounter = Trit.rand.nextInt(10);
+			exchX = traceRay(new BlockPos(1, 0, 0));
+			exchY = traceRay(new BlockPos(0, 1, 0));
+			exchZ = traceRay(new BlockPos(0, 0, 1));
+		}
+		if (world.getWorldTime()%5 != 0) return;
+
+		if (exchX > 0) {
+			exchangeEnergy(pos.add(exchX, 0, 0), 0);
+		}
+		if (exchY > 0) {
+			exchangeEnergy(pos.add(0, exchY, 0), 1);
+		}
+		if (exchZ > 0) {
+			exchangeEnergy(pos.add(0, 0, exchZ), 2);
+		}
+		markDirty();
+		IBlockState state = world.getBlockState(getPos());
+		world.notifyBlockUpdate(getPos(), state, state, 3);
+	}
+
+	private void exchangeEnergy(BlockPos bpos, int sideId) {
+		TileEnergyController tile = getEnergyBlockAt(bpos);
+		if (tile == null)
+			return;
+
+		for (int energyId = 0; energyId < 3; energyId++) {
+			long energyTarget = (tile.getAcceptableEnergy(energyId) - tile.getProvideableEnergy(energyId))
+					- (getAcceptableEnergy(energyId) - getProvideableEnergy(energyId));
+			if (energyTarget > 10 && rates[sideId][energyId] < MaxRate) {
+				rates[sideId][energyId]++;
+			} else
+			if (energyTarget < -10 && rates[sideId][energyId] > -MaxRate) {
+				rates[sideId][energyId]--;
+			} else {
+				if (Math.abs(rates[sideId][energyId]) > 0) rates[sideId][energyId] -= Math.copySign(1, rates[sideId][energyId]);
+			}
+
+			if (rates[sideId][energyId] > 10) {
+				
+				long v = Math.max(0l, Math.min(Math.min(Math.min(getProvideableEnergy(energyId), tile.getAcceptableEnergy(energyId)),
+								rates[sideId][energyId]-10), energyTarget));
+				//rates[sideId][energyId] = Math.min(rates[sideId][energyId], v);
+				tile.manageEnergy(energyId, v);
+				manageEnergy(energyId, -v);
+			}
+			if (rates[sideId][energyId] < -10) {
+				long v = Math.max(0l, Math.min(
+						Math.min(Math.min(tile.getProvideableEnergy(energyId), getAcceptableEnergy(energyId)),
+								-rates[sideId][energyId]-10), -energyTarget));
+				//rates[sideId][energyId] = -Math.min(-rates[sideId][energyId], v);
+				manageEnergy(energyId, v);
+				tile.manageEnergy(energyId, -v);
+			}
+		}
+	}
+
+	public String getDebugData() {
+		return String.format("%d %d %d | %d %d %d", exchX, exchY, exchZ, rates[0][0], rates[1][0], rates[2][0]);
+	}
+
+	@Override
+	public void readFromNBT(NBTTagCompound compound) {
+		super.readFromNBT(compound);
+	}
+
+	@Override
+	public NBTTagCompound writeToNBT(NBTTagCompound compound) {
+		super.writeToNBT(compound);
+		return compound;
+	}
+
+	@Override
+	public NBTTagCompound getUpdateTag() {
+		NBTTagCompound nbt = new NBTTagCompound();
+		for (int i = 0; i < 9; i++) {
+			nbt.setLong(Integer.toString(i), rates[i / 3][i % 3]);
+		}
+		nbt.setIntArray("dists", getLinkedDistances());
+		return nbt;
+
+	}
+
+	@Override
+	public SPacketUpdateTileEntity getUpdatePacket() {
+		return new SPacketUpdateTileEntity(getPos(), 1, getUpdateTag());
+	}
+
+	@Override
+	public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity packet) {
+		// CommonProxy.logger.info("data packet recieved");
+		NBTTagCompound nbt = packet.getNbtCompound();
+		for (int i = 0; i < 9; i++) {
+			// nbt.setLong(Integer.toString(i), rates[i/3][i%3]);
+			rates[i / 3][i % 3] = nbt.getLong(Integer.toString(i));
+		}
+		int[] dists = nbt.getIntArray("dists");
+		exchX = dists[0];
+		exchY = dists[1];
+		exchZ = dists[2];
+	}
+
+	@Override
+	public AxisAlignedBB getRenderBoundingBox() {
+		return new AxisAlignedBB(pos.getX()-15, pos.getY()-15, pos.getZ()-15, pos.getX()+15, pos.getY()+15, pos.getZ()+15);
+	}
 }

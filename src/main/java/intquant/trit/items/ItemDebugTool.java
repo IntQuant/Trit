@@ -2,6 +2,7 @@ package intquant.trit.items;
 
 import intquant.trit.blocks.tiles.TileFlowNetworkController;
 import intquant.trit.energy.IEnergyController;
+import intquant.trit.proxy.CommonProxy;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
@@ -13,6 +14,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
+import scala.swing.TextComponent;
 
 public class ItemDebugTool extends Item {
 
@@ -47,7 +49,10 @@ public class ItemDebugTool extends Item {
             
             component = new TextComponentTranslation("debug_msg.trit.energy_controller_data_2", ctrl.getProvideableLight(), ctrl.getProvideableForce(), ctrl.getProvideableSpatial());
             component.getStyle().setColor(TextFormatting.AQUA);
-            player.sendStatusMessage(component, false);
+			player.sendStatusMessage(component, false);
+
+			CommonProxy.logger.info(ctrl.getDebugData());
+			
         }
         
         if (tile != null && tile instanceof TileFlowNetworkController) {

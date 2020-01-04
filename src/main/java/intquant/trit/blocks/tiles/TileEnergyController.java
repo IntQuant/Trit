@@ -150,13 +150,6 @@ public class TileEnergyController extends TileEntity implements IEnergyControlle
 		this.doAccept = doAccept;
 		markDirty();
 	}
-	public void setLinker(BlockPos pos) {
-		linkerPos = pos;
-		markDirty();
-	}
-	public BlockPos getLinker() {
-		return linkerPos;
-	}
 	
 	@Override
 	public boolean isValid() {

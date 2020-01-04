@@ -81,7 +81,6 @@ public class CommonProxy {
 		addBasicBlock("adapter", TritMat);
 		addBasicBlock("vehicle_core", TritMat);
 		addBasicBlock("glass_obsidian", TritMat);
-
 		
 		BFL = regBlock(new BlockFlowLinker(TritMat), "flow_linker");
 		FNC = regBlock(new BlockFlowNetworkController(TritMat), "flow_network_controller");
@@ -92,7 +91,6 @@ public class CommonProxy {
 		GameRegistry.registerTileEntity(TileFlowLinker.class, mkResoureLoc("TileFlowLinker"));
 		GameRegistry.registerTileEntity(TileSolarPanel.class, mkResoureLoc("TileSolarPanel"));
 		GameRegistry.registerTileEntity(TileForceTransiever.class, mkResoureLoc("TileForceTransiever"));
-		
 		
 		for (Block current : trit_blocks) {
 			event.getRegistry().register(current);
@@ -131,7 +129,7 @@ public class CommonProxy {
 		}
 	}
 	    
-	
+		
     public void preInit(FMLPreInitializationEvent event)
     {
     	logger = event.getModLog();

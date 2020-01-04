@@ -29,9 +29,11 @@ public interface IEnergyController {
 	}
 	
 	boolean isValid();
-	void setLinker(BlockPos pos);
-	BlockPos getLinker();
-	
+	//void setLinker(BlockPos pos);
+	//BlockPos getLinker();
+	default public String getDebugData() {
+		return "<-NO VALUE->";
+	}
 	
 	//Should add value to energy and return result
 	default public  long manageLight(long value)   {return 0;};
@@ -82,5 +84,44 @@ public interface IEnergyController {
 		long targetValue = Math.min(getAcceptableSpatial(), value);
 		manageSpatial(targetValue);
 		return targetValue;
+	}
+
+	default public long getAcceptableEnergy(int type) {
+		if (type == 0) {
+			return getAcceptableLight();
+		}
+		if (type == 1) {
+			return getAcceptableForce();
+		}
+		if (type == 2) {
+			return getAcceptableSpatial();
+		}
+		return 0;
+	}
+
+	default public long getProvideableEnergy(int type) {
+		if (type == 0) {
+			return getProvideableLight();
+		}
+		if (type == 1) {
+			return getProvideableForce();
+		}
+		if (type == 2) {
+			return getProvideableSpatial();
+		}
+		return 0;
+	}
+
+	default public long manageEnergy(int type, long amount) {
+		if (type == 0) {
+			return manageLight(amount);
+		}
+		if (type == 1) {
+			return manageForce(amount);
+		}
+		if (type == 2) {
+			return manageSpatial(amount);
+		}
+		return 0;
 	}
 }
