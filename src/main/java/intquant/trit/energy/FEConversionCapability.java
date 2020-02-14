@@ -1,6 +1,5 @@
 package intquant.trit.energy;
 
-import net.minecraftforge.energy.EnergyStorage;
 import net.minecraftforge.energy.IEnergyStorage;
 
 public class FEConversionCapability implements IEnergyStorage {

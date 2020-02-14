@@ -26,7 +26,7 @@ public interface IEnergyController {
 		return Math.max(0, getMaxSpatialStorage() - manageSpatial(0));
 	}
 	
-	boolean isValid();
+	default public boolean isValid() {return true;};
 	//void setLinker(BlockPos pos);
 	//BlockPos getLinker();
 	default public String getDebugData() {

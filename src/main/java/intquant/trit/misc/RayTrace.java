@@ -14,7 +14,7 @@ import net.minecraft.world.World;
 public class RayTrace {
 	//http://www.minecraftforge.net/forum/topic/8454-ray-tracing-from-an-entitys-head-angle/
 	public static RayTraceResult tracePath(World world, float x, float y, float z, float tx, float ty, float tz, float borderSize, @Nullable HashSet<Entity> excluded)
-	  {
+	  {/*
 	  Vec3d startVec = new Vec3d(x, y, z);
 	  Vec3d endVec = new Vec3d(tx, ty, tz);
 	  float minX = x < tx ? x : tx;
@@ -59,7 +59,7 @@ public class RayTrace {
 	    {
 	    blockHit = new RayTraceResult(closestHitEntity);
 	    }
-	  return blockHit;
+	  return blockHit;*/return null;
 	  }
 
 	public static RayTraceResult tracePath(World world, double x, double y, double z, double x2, double y2, double z2,

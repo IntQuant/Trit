@@ -7,7 +7,6 @@ import intquant.trit.energy.IEnergyController;
 public class ValidicyPredicate implements Predicate<IEnergyController> {
 
 	public ValidicyPredicate() {
-		// TODO Auto-generated constructor stub
 	}
 
 	@Override

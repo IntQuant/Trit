@@ -1,22 +1,24 @@
 package intquant.trit.blocks.tiles;
 
-import net.minecraft.util.ITickable;
+import intquant.trit.blocks.ModBlocks;
+import net.minecraft.tileentity.ITickableTileEntity;
 
-public class TileSolarPanel extends TileFlowLinker implements ITickable{
+public class TileSolarPanel extends TileFlowLinker implements ITickableTileEntity{
 	private boolean isValid = false;
 	private int updates = 0;
 	
 	public TileSolarPanel() {
-		super();
+		super(ModBlocks.TILE_SOLAR_PANEL);
 		this.setMaxLightStorage(1000);
 		this.setMaxForceStorage(100);
 		this.setMaxSpatialStorage(100);
 		this.setDoProvide(true);
 		this.setDoAccept(false);
 	}
-	public void update() {
-		super.update();
-		updates++;
+	public void tick() {
+		super.tick();
+		manageLight(1);
+		/*updates++;
 		if (updates>50) {
 			updates = 0;
 			isValid = world.canBlockSeeSky(pos);
@@ -27,6 +29,6 @@ public class TileSolarPanel extends TileFlowLinker implements ITickable{
 				this.manageForce(Math.min(this.getMaxForceStorage() - this.forceStorage, 1));
 				this.manageSpatial(Math.min(this.getMaxSpatialStorage() - this.spatialStorage, 1));
 			}
-		}
+		}*/
 	}
 }

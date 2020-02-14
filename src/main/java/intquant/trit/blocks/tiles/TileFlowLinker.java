@@ -3,22 +3,16 @@ package intquant.trit.blocks.tiles;
 import javax.annotation.Nullable;
 
 import intquant.trit.Trit;
-import intquant.trit.energy.FEConversionCapability;
-import intquant.trit.proxy.CommonProxy;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.network.NetworkManager;
-import net.minecraft.network.play.server.SPacketUpdateTileEntity;
+import intquant.trit.blocks.ModBlocks;
+import net.minecraft.block.BlockState;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.ITickable;
+import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.energy.CapabilityEnergy;
-import net.minecraftforge.energy.IEnergyStorage;
 
-public class TileFlowLinker extends TileEnergyController implements ITickable {
+public class TileFlowLinker extends TileEnergyController implements ITickableTileEntity {
 	private int tickCounter = 0;
 	private int exchX = 0;
 	private int exchY = 0;
@@ -29,7 +23,7 @@ public class TileFlowLinker extends TileEnergyController implements ITickable {
 
 	//protected FEConversionCapability fe_handler;
 	public TileFlowLinker(int dir) {
-		super();
+		super(ModBlocks.TILE_FLOWLINKER);
 		setMaxLightStorage(10000);
 		setMaxForceStorage(10000);
 		setMaxSpatialStorage(10000);
@@ -39,7 +33,16 @@ public class TileFlowLinker extends TileEnergyController implements ITickable {
 	}
 
 	public TileFlowLinker() {
-		super();
+		super(ModBlocks.TILE_FLOWLINKER);
+		setMaxLightStorage(10000);
+		setMaxForceStorage(10000);
+		setMaxSpatialStorage(10000);
+		setDoAccept(true);
+		setDoProvide(true);		
+	}
+
+	public TileFlowLinker(TileEntityType<?> t) {
+		super(t);
 		//fe_handler = new FEConversionCapability(this);
 	}
 
@@ -92,12 +95,13 @@ public class TileFlowLinker extends TileEnergyController implements ITickable {
 		}
 	}
 
-	public void update() {
+	public void tick() {
 		if (world == null || world.isRemote)
 			return;
 		if (pos == null || world == null)
 			return;
 
+		/*
 		BlockPos placed_on = pos.offset(EnumFacing.getFront(dir).getOpposite());
 		TileEntity pon = world.getTileEntity(placed_on);
 		if (pon != null) {
@@ -112,7 +116,7 @@ public class TileFlowLinker extends TileEnergyController implements ITickable {
 					manageLight(v);
 				}
 			}
-		}
+		}*/
 
 
 		tickCounter++;
@@ -122,7 +126,7 @@ public class TileFlowLinker extends TileEnergyController implements ITickable {
 			exchY = traceRay(new BlockPos(0, 1, 0));
 			exchZ = traceRay(new BlockPos(0, 0, 1));
 		}
-		if (world.getWorldTime()%5 != 0) return;
+		//if (world.getWorldTime()%5 != 0) return;
 
 		if (exchX > 0) {
 			exchangeEnergy(pos.add(exchX, 0, 0), 0);
@@ -134,7 +138,7 @@ public class TileFlowLinker extends TileEnergyController implements ITickable {
 			exchangeEnergy(pos.add(0, 0, exchZ), 2);
 		}
 		markDirty();
-		IBlockState state = world.getBlockState(getPos());
+		BlockState state = world.getBlockState(getPos());
 		world.notifyBlockUpdate(getPos(), state, state, 3);
 	}
 
@@ -165,19 +169,21 @@ public class TileFlowLinker extends TileEnergyController implements ITickable {
 					rates[sideId][energyId] = tr;
 				}
 			} else {
+				long v1 = 0;
+				long v2 = 0;
 				if (tile.isDoAccept()) {
 					long v = Math.min(tile.getAcceptableEnergy(energyId), getProvideableEnergy(energyId));
 					tile.manageEnergy(energyId, v);
 					manageEnergy(energyId, -v);
-					rates[sideId][energyId] = v;
+					v1 = v;
 				}
 				if (tile.isDoProvide()) {
 					long v = Math.min(getAcceptableEnergy(energyId), tile.getProvideableEnergy(energyId));
 					manageEnergy(energyId, v);
 					tile.manageEnergy(energyId, -v);
-					rates[sideId][energyId] = v;
-
+					v2 = v;
 				}
+				rates[sideId][energyId] = Math.max(v1, v2);
 			}
 		}
 	}
@@ -187,31 +193,30 @@ public class TileFlowLinker extends TileEnergyController implements ITickable {
 	}
 
 	@Override
-	public void readFromNBT(NBTTagCompound compound) {
-		super.readFromNBT(compound);
-		if (compound.hasKey("dir", 99)) {
-			dir = compound.getInteger("dir");
+	public void read(CompoundNBT compound) {
+		if (compound.contains("dir", 99)) {
+			dir = compound.getInt("dir");
 		}
+		super.read(compound);
 	}
 
 	@Override
-	public NBTTagCompound writeToNBT(NBTTagCompound compound) {
-		super.writeToNBT(compound);
-		compound.setInteger("dir", dir);
-		return compound;
+	public CompoundNBT write(CompoundNBT compound) {
+		compound.putInt("dir", dir);
+		return super.write(compound);
 	}
 
 	@Override
-	public NBTTagCompound getUpdateTag() {
-		NBTTagCompound nbt = new NBTTagCompound();
+	public CompoundNBT getUpdateTag() {
+		CompoundNBT nbt = new CompoundNBT();
 		for (int i = 0; i < 9; i++) {
-			nbt.setLong(Integer.toString(i), rates[i / 3][i % 3]);
+			nbt.putLong(Integer.toString(i), rates[i / 3][i % 3]);
 		}
-		nbt.setIntArray("dists", getLinkedDistances());
+		nbt.putIntArray("dists", getLinkedDistances());
 		return nbt;
 
 	}
-
+	/*
 	@Override
 	public SPacketUpdateTileEntity getUpdatePacket() {
 		return new SPacketUpdateTileEntity(getPos(), 1, getUpdateTag());
@@ -220,7 +225,7 @@ public class TileFlowLinker extends TileEnergyController implements ITickable {
 	@Override
 	public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity packet) {
 		// CommonProxy.logger.info("data packet recieved");
-		NBTTagCompound nbt = packet.getNbtCompound();
+		CompoundNBT nbt = packet.getNbtCompound();
 		for (int i = 0; i < 9; i++) {
 			// nbt.setLong(Integer.toString(i), rates[i/3][i%3]);
 			rates[i / 3][i % 3] = nbt.getLong(Integer.toString(i));
@@ -229,7 +234,7 @@ public class TileFlowLinker extends TileEnergyController implements ITickable {
 		exchX = dists[0];
 		exchY = dists[1];
 		exchZ = dists[2];
-	}
+	}*/
 
 	@Override
 	public AxisAlignedBB getRenderBoundingBox() {
